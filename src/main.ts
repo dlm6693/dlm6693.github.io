@@ -30,7 +30,7 @@ const {desktop, phone} = SITE.skyline;
 mount(
   'home',
   `
-    <section class="stage">
+    <section class="opening">
       <div class="stage-copy">
         <p class="prompt"><span class="ps1">dlm@queens</span>:~$ whoami</p>
         <h1 class="name">${esc(SITE.name)}</h1>
@@ -51,20 +51,23 @@ mount(
 
     <section class="panel settle" aria-labelledby="loadout-heading">
       <h2 id="loadout-heading"><span class="kicker">loadout</span></h2>
-      <p class="panel-note">What the work is usually written in.</p>
+      <p class="panel-note">What I work with.</p>
       <ul class="loadout">${loadout}</ul>
     </section>
 
     <section class="city-scene settle" aria-labelledby="city-heading">
       <h2 id="city-heading" class="visually-hidden">Contribution skyline</h2>
+      <div class="rail-slot"></div>
       <figure>
-        <picture>
-          <source media="(max-width: 600px)" srcset="${esc(phone.src)}" width="${phone.width}" height="${phone.height}" />
-          <img src="${esc(desktop.src)}" width="${desktop.width}" height="${desktop.height}" alt="GitHub contributions over the last year, drawn as an isometric city. One building per day." />
-        </picture>
+        <div class="city-frame">
+          <picture>
+            <source media="(max-width: 800px)" srcset="${esc(phone.src)}" width="${phone.width}" height="${phone.height}" />
+            <img src="${esc(desktop.src)}" width="${desktop.width}" height="${desktop.height}" alt="GitHub contributions over the last year, drawn as an isometric city. One building per day." />
+          </picture>
+        </div>
         <figcaption>
           <p>One building a day, from the last year of <a href="${esc(SITE.github)}/${esc(SITE.handle)}">GitHub contributions</a>. A skyline, not a score.</p>
-          <p class="credit">City generator adapted from <a href="${esc(CREDIT.url)}">${esc(CREDIT.name)}’s profile console</a> (MIT; <a href="${esc(CREDIT.post)}">how it was built</a>).</p>
+          <p class="credit">City generator adapted from <a href="${esc(CREDIT.url)}">${esc(CREDIT.name)}’s profile console</a> (MIT; <a href="${esc(CREDIT.post)}">how it was built</a>). The marks are the companies' own, shown small.</p>
         </figcaption>
       </figure>
     </section>

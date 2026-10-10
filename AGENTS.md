@@ -75,7 +75,7 @@ Single project guidance file for this repo. Do not create `CLAUDE.md` or other g
   - `street`: an elevated 7 train above the skyline and street traffic below it, paced by the last 7 days of contributions.
   - `counter`: a status strip of real GitHub totals (contributions, streaks, last 7 days) that counts up once.
   - `years`: one tower per year on GitHub from `stats.years`, the long view under the daily city.
-  - `cats`: the three real cats (white-and-grey bicolor, mackerel tabby, tuxedo tabby) walking, sitting, and occasionally batting a tennis ball.
+  - `cats`: the three real cats roam the page and chase a tennis ball. The ball comes to rest off the text.
 - Data comes from `public/data/calendar.json` and `public/data/stats.json`, copied from the profile repo by `refresh-city.yml`. Never hard-code or invent numbers; when the data is missing, draw the quiet default.
 - Any new scene must obey the motion rules (CSS animation gated behind `html[data-motion='on']`, finished composition when off), stay `pointer-events: none`, never cover text or the HUD, and cause no horizontal overflow at 390px.
 - The skyline SVG already animates windows, clouds, and a plane. Do not hand-edit it to add more.

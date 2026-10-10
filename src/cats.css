@@ -1,28 +1,54 @@
-/* Cats roam the page (positions set from cats.ts) and chase a tennis ball. */
+/* Cats roam the page. The layer sits under the header and footer and ignores clicks. */
+.play {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.play .walker {
+  position: absolute;
+  width: 3.4rem;
+  pointer-events: none;
+}
+.play .walker svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
 .walker .hop { display: block; transform-origin: bottom center; }
-html[data-motion='on'] .walker.walking .hop { animation: hop 0.36s ease-in-out infinite; }
-html[data-motion='on'] .walker.sitting .hop { transform: translateY(4px) scaleY(0.8); }
-html[data-motion='on'] .walker.batting .hop { animation: bat 0.4s ease-out; }
+html[data-motion='on'] .walking .hop { animation: hop 0.32s ease-in-out infinite; }
+.sitting .hop { transform: translateY(3px) scaleY(0.82); }
+html[data-motion='on'] .batting .hop { animation: bat 0.36s ease-out; }
+html[data-motion='on'] .leaping .hop { animation: leap 0.46s ease-in-out; }
 .walker.facing-right svg { transform: scaleX(-1); }
 
+@keyframes hop {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+@keyframes leap {
+  0% { transform: translateY(0); }
+  45% { transform: translateY(-34px); }
+  100% { transform: translateY(0); }
+}
 @keyframes bat {
   0% { transform: translateY(0) rotate(0); }
-  40% { transform: translateY(-14px) rotate(-12deg); }
+  40% { transform: translateY(-12px) rotate(-14deg); }
   100% { transform: translateY(0) rotate(0); }
 }
 
-.ball {
+.play .ball {
   position: absolute;
-  z-index: 1;
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background: #ccff00;
-  box-shadow: inset -2px -2px 0 rgb(0 0 0 / 0.2), 2px 3px 0 rgb(0 0 0 / 0.35);
+  box-shadow: inset -2px -2px 0 rgb(0 0 0 / 0.25), 2px 3px 0 rgb(0 0 0 / 0.35);
   pointer-events: none;
-  transition: opacity 0.6s ease;
 }
-.ball::before {
+.play .ball::before {
   content: '';
   position: absolute;
   inset: 2px -1px;
@@ -31,8 +57,7 @@ html[data-motion='on'] .walker.batting .hop { animation: bat 0.4s ease-out; }
   border-bottom-color: transparent;
   border-radius: 50%;
 }
-.ball.gone { opacity: 0; }
 
 @media (max-width: 600px) {
-  .walker { width: 3.2rem; }
+  .play .walker { width: 2.8rem; }
 }

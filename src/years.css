@@ -45,7 +45,33 @@
 .tower-year small { display: block; font-size: 0.6rem; opacity: 0.8; }
 .years-note { margin: 0.6rem 0 0; color: var(--muted); font-family: var(--mono); font-size: 0.75rem; }
 
-html[data-motion='on'] .tower-body { animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both, glow 4.6s ease-in-out infinite; animation-delay: calc(var(--i) * 90ms), calc(var(--i) * 0.7s + 1s); }
+html[data-motion='on'] .tower-body { animation: rise 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both, glow var(--blink, 2.4s) steps(2, end) infinite; animation-delay: calc(var(--i) * 90ms), calc(var(--i) * 0.4s + 1s); }
+
+.years-sky { position: relative; height: 28px; overflow: hidden; container-type: inline-size; }
+.years-cloud, .years-plane { position: absolute; top: 6px; image-rendering: pixelated; }
+.years-cloud {
+  left: 12%;
+  width: 36px;
+  height: 12px;
+  background:
+    radial-gradient(circle at 8px 8px, var(--muted) 6px, transparent 7px),
+    radial-gradient(circle at 18px 6px, #c5d0e4 7px, transparent 8px),
+    radial-gradient(circle at 28px 8px, var(--muted) 5px, transparent 6px);
+  opacity: 0.55;
+}
+.years-plane {
+  left: 0;
+  width: 22px;
+  height: 8px;
+  background:
+    linear-gradient(#f4f1ea, #f4f1ea) 0 3px / 16px 2px no-repeat,
+    linear-gradient(#f4f1ea, #f4f1ea) 6px 0 / 8px 2px no-repeat,
+    linear-gradient(#f0b429, #f0b429) 18px 3px / 4px 2px no-repeat;
+}
+html[data-motion='on'] .years-cloud { animation: drift 36s linear infinite; }
+html[data-motion='on'] .years-plane { animation: fly 14s linear infinite; }
+@keyframes drift { from { transform: translateX(-40px); } to { transform: translateX(70cqi); } }
+@keyframes fly { 0% { transform: translateX(-30px); } 70%, 100% { transform: translateX(100cqi); } }
 @keyframes rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
 @keyframes glow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.25); } }
 

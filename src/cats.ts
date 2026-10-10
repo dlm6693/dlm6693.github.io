@@ -28,15 +28,9 @@ function cat(kind: string, body: string, tail: string, extra: string, lid: strin
   </svg></span></span>`;
 }
 
-export function wanderers(): string {
-  const bicolor = cat(
-    'bicolor',
-    WHITE,
-    GREY,
-    r(8, 3, 4, 4, GREY) + r(8, 6, 6, 4, GREY) + r(10, 16, 10, 6, GREY_DARK),
-    WHITE,
-  );
-  const mackerel = cat(
+const COATS: Array<[string, string, string, string, string]> = [
+  ['bicolor', WHITE, GREY, r(8, 3, 4, 4, GREY) + r(8, 6, 6, 4, GREY) + r(10, 16, 10, 6, GREY_DARK), WHITE],
+  [
     'mackerel',
     TABBY,
     TABBY,
@@ -47,8 +41,8 @@ export function wanderers(): string {
       r(16, 16, 2, 8, STRIPE) +
       r(21, 16, 2, 8, STRIPE),
     TABBY,
-  );
-  const tuxedo = cat(
+  ],
+  [
     'tuxedo',
     TUX,
     TUX,
@@ -62,29 +56,56 @@ export function wanderers(): string {
       r(22, 23, 5, 3, WHITE) +
       r(11, 12, 8, 3, WHITE),
     TUX,
-  );
-  return `<div class="wander" aria-hidden="true">${bicolor}${mackerel}${tuxedo}</div>`;
+  ],
+];
+
+export function wanderers(): string {
+  return '';
 }
 
-type Cat = {el: HTMLElement; x: number; y: number; timer?: number};
+type Mood = 'run' | 'towers' | 'skyline' | 'chase' | 'traffic';
+type Cat = {el: HTMLElement; x: number; y: number; timer?: number; mood: Mood; at: number; quarry?: HTMLElement};
 
-const STROLL = 70; // px per second
+const WALK = 78;
 const SPRINT = 260;
-const CAT_W = 70;
+const CAT = 58;
+/** Landing spots on the contribution city, as fractions of the picture. */
+const SKY = [
+  [0.18, 0.58], [0.30, 0.50], [0.42, 0.44], [0.52, 0.38], [0.63, 0.46],
+  [0.74, 0.54], [0.28, 0.66], [0.46, 0.62], [0.60, 0.68], [0.36, 0.74],
+];
 
 function motionOn(): boolean {
   return document.documentElement.dataset.motion === 'on';
 }
-
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
+const pick = <T>(xs: T[]): T => xs[Math.floor(Math.random() * xs.length)];
 
-/** Roam the whole page; when a tennis ball turns up where you are reading, chase it. */
+/**
+ * Each cat picks its own activity and keeps it for a little while: running
+ * the page, hopping the yearly towers, hopping the contribution city, or
+ * chasing the tennis ball.
+ */
 export function bootCats(world: HTMLElement): void {
-  const wander = world.querySelector<HTMLElement>('.wander');
-  if (!wander) return;
-  const cats: Cat[] = [...wander.querySelectorAll<HTMLElement>('.walker')].map(el => ({el, x: 0, y: 0}));
+  const play = document.createElement('div');
+  play.className = 'play';
+  play.setAttribute('aria-hidden', 'true');
+  world.append(play);
+
+  const starters: Mood[] = ['run', 'towers', 'skyline'];
+  const cats: Cat[] = COATS.map((coat, i) => {
+    const tpl = document.createElement('template');
+    tpl.innerHTML = cat(...coat).trim();
+    const el = tpl.content.firstElementChild;
+    if (!(el instanceof HTMLElement)) throw new Error('cat');
+    play.append(el);
+    return {el, x: 0, y: 0, mood: starters[i] ?? 'run', at: i * 3};
+  });
+
   const timers = new Set<number>();
   let ball: HTMLElement | null = null;
+  let ballAt = {x: 0, y: 0};
+  let ballMove = 0;
 
   const later = (fn: () => void, ms: number) => {
     const id = window.setTimeout(() => {
@@ -94,121 +115,225 @@ export function bootCats(world: HTMLElement): void {
     timers.add(id);
     return id;
   };
-  const bounds = () => ({w: wander.clientWidth - CAT_W, h: wander.clientHeight - 60});
-  /** A point inside the part of the page currently on screen. */
-  const visiblePoint = () => {
-    const top = wander.getBoundingClientRect().top + window.scrollY;
-    const {w, h} = bounds();
-    const y0 = Math.max(0, window.scrollY - top + 80);
-    const y1 = Math.min(h, window.scrollY - top + window.innerHeight - 80);
-    return {x: rand(16, w - 16), y: y1 > y0 ? rand(y0, y1) : rand(0, h)};
-  };
 
-  const moveTo = (cat: Cat, x: number, y: number, speed: number, then: () => void) => {
-    const dist = Math.hypot(x - cat.x, y - cat.y);
-    const secs = Math.max(0.3, dist / speed);
-    cat.el.classList.toggle('facing-right', x > cat.x);
-    cat.el.classList.remove('sitting');
-    cat.el.classList.add('walking');
-    cat.el.style.transition = `left ${secs}s linear, top ${secs}s linear`;
-    cat.el.style.left = `${x}px`;
-    cat.el.style.top = `${y}px`;
-    cat.x = x;
-    cat.y = y;
-    if (cat.timer) window.clearTimeout(cat.timer);
-    cat.timer = later(() => {
-      cat.el.classList.remove('walking');
-      then();
-    }, secs * 1000);
-  };
+  const box = () => ({w: Math.max(8, play.clientWidth - CAT), h: Math.max(48, play.clientHeight - 48)});
+  const tall = () => cats[0]?.el.offsetHeight || 36;
 
-  const stroll = (cat: Cat) => {
-    if (!motionOn()) return;
-    const {w, h} = bounds();
-    // Mostly short hops nearby, sometimes a long trip.
-    const far = Math.random() < 0.25;
-    const x = far ? rand(0, w) : Math.min(w, Math.max(0, cat.x + rand(-260, 260)));
-    const y = far ? rand(0, h) : Math.min(h, Math.max(0, cat.y + rand(-200, 200)));
-    moveTo(cat, x, y, STROLL, () => {
-      cat.el.classList.add('sitting');
-      cat.timer = later(() => stroll(cat), rand(2000, 6000));
+  const roofs = () => {
+    const origin = play.getBoundingClientRect();
+    return [...document.querySelectorAll<HTMLElement>('.tower-body')].map(el => {
+      const r = el.getBoundingClientRect();
+      return {x: r.left - origin.left + r.width / 2 - CAT / 2, y: r.top - origin.top - tall() + 8};
     });
   };
 
-  const placeBall = (x: number, y: number, secs: number) => {
-    if (!ball) return;
-    ball.style.transition = `left ${secs}s cubic-bezier(.2,.7,.3,1), top ${secs}s cubic-bezier(.2,.7,.3,1), transform ${secs}s linear`;
-    ball.style.left = `${x + CAT_W / 2}px`;
-    ball.style.top = `${y + 40}px`;
-    ball.style.transform = `rotate(${rand(360, 900)}deg)`;
+  const skyline = () => {
+    const frame = document.querySelector('.city-frame');
+    if (!frame) return [];
+    const origin = play.getBoundingClientRect();
+    const r = frame.getBoundingClientRect();
+    if (r.width < 40) return [];
+    return SKY.map(([fx, fy]) => ({
+      x: r.left - origin.left + r.width * fx - CAT / 2,
+      y: r.top - origin.top + r.height * fy - tall() + 8,
+    }));
   };
 
-  const rally = (bats: number) => {
-    if (!motionOn() || !ball) return;
-    const target = visiblePoint();
-    placeBall(target.x, target.y, 1.1);
-    let caught = false;
-    for (const cat of cats) {
-      // Everyone runs; they arrive a bit apart because they start in different places.
-      moveTo(cat, target.x + rand(-24, 24), target.y + rand(-10, 10), SPRINT + rand(-40, 40), () => {
-        if (caught) {
-          cat.el.classList.add('sitting');
-          return;
-        }
-        caught = true;
-        cat.el.classList.add('batting');
-        later(() => cat.el.classList.remove('batting'), 400);
-        if (bats > 1) later(() => rally(bats - 1), 450);
-        else later(endRally, 600);
-      });
+  const choices = (c: Cat): Mood[] => {
+    const moods: Mood[] = ['run', 'chase'];
+    if (roofs().length > 1) moods.push('towers');
+    if (skyline().length) moods.push('skyline');
+    if (document.querySelector('.car, .el-train')) moods.push('traffic');
+    return moods.filter(m => m !== c.mood).concat(c.mood);
+  };
+
+  const ground = () => {
+    const origin = play.getBoundingClientRect();
+    const {w, h} = box();
+    const viewTop = Math.max(64, -origin.top + 24);
+    const viewBot = Math.min(h, -origin.top + window.innerHeight - 72);
+    const blocked = 'p, h1, h2, h3, li, a, button, dd, dt, figcaption, .meter, .hud, .foot';
+    for (let i = 0; i < 12; i++) {
+      const x = rand(8, w);
+      const y = viewBot > viewTop ? rand(viewTop, viewBot) : rand(64, h);
+      const hit = document.elementFromPoint(origin.left + x + 20, origin.top + y + 12);
+      if (hit?.closest(blocked)) continue;
+      return {x, y};
     }
+    return {x: rand(8, w), y: Math.min(h, Math.max(64, -origin.top + window.innerHeight - 88))};
   };
 
-  const endRally = () => {
-    ball?.classList.add('gone');
-    later(() => {
-      ball?.remove();
-      ball = null;
-    }, 700);
-    cats.forEach(cat => (cat.timer = later(() => stroll(cat), rand(3000, 7000))));
-    later(serve, rand(20_000, 35_000));
+  const jump = (c: Cat, x: number, y: number, done: () => void) => {
+    c.el.classList.remove('walking', 'sitting');
+    c.el.classList.add('leaping');
+    c.el.classList.toggle('facing-right', x > c.x + 4);
+    const secs = 0.46;
+    c.el.style.transition = `left ${secs}s linear, top ${secs}s ease-in`;
+    c.el.style.left = `${x}px`;
+    c.el.style.top = `${y}px`;
+    c.x = x;
+    c.y = y;
+    if (c.timer) window.clearTimeout(c.timer);
+    c.timer = later(() => {
+      c.el.classList.remove('leaping');
+      done();
+    }, secs * 1000);
+  };
+
+  const go = (c: Cat, x: number, y: number, speed: number, done: () => void) => {
+    const {w, h} = box();
+    x = Math.min(w, Math.max(0, x));
+    y = Math.min(h, Math.max(40, y));
+    const secs = Math.max(0.28, Math.hypot(x - c.x, y - c.y) / speed);
+    c.el.classList.toggle('facing-right', x > c.x + 4);
+    c.el.classList.remove('sitting', 'leaping');
+    c.el.classList.add('walking');
+    c.el.style.transition = `left ${secs}s linear, top ${secs}s linear`;
+    c.el.style.left = `${x}px`;
+    c.el.style.top = `${y}px`;
+    c.x = x;
+    c.y = y;
+    if (c.timer) window.clearTimeout(c.timer);
+    c.timer = later(() => {
+      c.el.classList.remove('walking');
+      done();
+    }, secs * 1000);
+  };
+
+  const move = (c: Cat, x: number, y: number, done: () => void) => {
+    if (Math.abs(y - c.y) > 28) jump(c, x, y, done);
+    else go(c, x, y, c.mood === 'chase' ? SPRINT : WALK, done);
+  };
+
+  const relocate = () => {
+    if (!ball) return;
+    const pads = [...roofs(), ...skyline(), ground()];
+    ballAt = pick(pads);
+    const secs = 0.7;
+    ball.style.transition = `left ${secs}s cubic-bezier(.2,.7,.3,1), top ${secs}s cubic-bezier(.2,.7,.3,1)`;
+    ball.style.left = `${ballAt.x + 18}px`;
+    ball.style.top = `${ballAt.y + 20}px`;
+    window.clearTimeout(ballMove);
+    ballMove = later(() => relocate(), rand(2200, 4200));
   };
 
   const serve = () => {
     if (!motionOn() || ball) return;
     ball = document.createElement('span');
     ball.className = 'ball';
-    const start = visiblePoint();
-    ball.style.left = `${start.x}px`;
-    ball.style.top = `${start.y}px`;
-    wander.append(ball);
-    cats.forEach(cat => cat.timer && window.clearTimeout(cat.timer));
-    later(() => rally(3 + Math.floor(Math.random() * 3)), 50);
+    play.append(ball);
+    ballAt = ground();
+    ball.style.left = `${ballAt.x}px`;
+    ball.style.top = `${ballAt.y}px`;
+    ballMove = later(() => relocate(), 900);
+  };
+
+  const rest = (c: Cat, then: () => void, lo: number, hi: number) => {
+    c.el.classList.add('sitting');
+    c.timer = later(then, rand(lo, hi));
+  };
+
+  const act = (c: Cat) => {
+    if (!motionOn()) return;
+    if (Math.random() < 0.38) c.mood = pick(choices(c));
+    if (c.mood === 'towers') {
+      const rs = roofs();
+      if (rs.length < 2) {
+        c.mood = 'run';
+        act(c);
+        return;
+      }
+      c.at = (c.at + (Math.random() < 0.5 ? 1 : rs.length - 1)) % rs.length;
+      jump(c, rs[c.at].x, rs[c.at].y, () => rest(c, () => act(c), 500, 1400));
+      return;
+    }
+    if (c.mood === 'skyline') {
+      const pads = skyline();
+      if (!pads.length) {
+        c.mood = 'run';
+        act(c);
+        return;
+      }
+      c.at = (c.at + 1 + Math.floor(Math.random() * 3)) % pads.length;
+      jump(c, pads[c.at].x, pads[c.at].y, () => rest(c, () => act(c), 500, 1400));
+      return;
+    }
+    if (c.mood === 'traffic') {
+      const fleet = [...document.querySelectorAll<HTMLElement>('.car, .el-train')];
+      if (!fleet.length) {
+        c.mood = 'run';
+        act(c);
+        return;
+      }
+      if (!c.quarry?.isConnected) c.quarry = pick(fleet);
+      const origin = play.getBoundingClientRect();
+      const r = c.quarry.getBoundingClientRect();
+      const gone = r.width < 2 || r.right < origin.left - 30 || r.left > origin.right + 30;
+      if (gone) c.quarry = pick(fleet);
+      const live = c.quarry.getBoundingClientRect();
+      const x = live.left - origin.left + live.width / 2 - CAT / 2;
+      const y = live.top - origin.top - tall() + live.height;
+      if (Math.hypot(c.x - x, c.y - y) < 28) {
+        c.el.classList.add('sitting');
+        c.timer = later(() => act(c), rand(200, 500));
+        return;
+      }
+      move(c, x, y, () => act(c));
+      return;
+    }
+    if (c.mood === 'chase') {
+      if (!ball) {
+        c.timer = later(() => act(c), 350);
+        return;
+      }
+      const near = Math.hypot(c.x - ballAt.x, c.y - ballAt.y) < 48;
+      if (near) {
+        c.el.classList.add('batting');
+        later(() => c.el.classList.remove('batting'), 360);
+        relocate();
+        rest(c, () => act(c), 280, 700);
+        return;
+      }
+      move(c, ballAt.x + rand(-14, 14), ballAt.y + rand(-8, 8), () => act(c));
+      return;
+    }
+    const there = ground();
+    go(c, there.x, there.y, WALK, () => rest(c, () => act(c), 700, 2200));
+  };
+
+  const park = () => {
+    const rs = roofs();
+    const pads = skyline();
+    const {w, h} = box();
+    cats.forEach((c, i) => {
+      c.el.classList.add('sitting');
+      c.el.classList.remove('walking', 'batting', 'leaping', 'facing-right');
+      c.el.style.transition = 'none';
+      const spot = i === 0 && rs.length ? rs[0] : i === 1 && pads.length ? pads[3] : {x: w * (0.15 + i * 0.28), y: h - 8};
+      c.x = spot.x;
+      c.y = spot.y;
+      c.el.style.left = `${c.x}px`;
+      c.el.style.top = `${c.y}px`;
+    });
+  };
+
+  const stop = () => {
+    for (const id of timers) window.clearTimeout(id);
+    timers.clear();
+    ball?.remove();
+    ball = null;
+    park();
   };
 
   const start = () => {
     stop();
     if (!motionOn()) return;
-    for (const cat of cats) {
-      cat.x = cat.el.offsetLeft;
-      cat.y = cat.el.offsetTop;
-      cat.el.style.left = `${cat.x}px`;
-      cat.el.style.top = `${cat.y}px`;
-    }
-    cats.forEach((cat, i) => (cat.timer = later(() => stroll(cat), 600 + i * 1500)));
-    later(serve, 9000);
+    cats.forEach((c, i) => {
+      c.mood = starters[i] ?? 'run';
+      c.timer = later(() => act(c), 1100 + i * 600);
+    });
+    later(serve, 2500);
   };
-
-  function stop() {
-    for (const id of timers) window.clearTimeout(id);
-    timers.clear();
-    ball?.remove();
-    ball = null;
-    for (const cat of cats) {
-      cat.el.removeAttribute('style');
-      cat.el.classList.remove('walking', 'sitting', 'batting', 'facing-right');
-    }
-  }
 
   start();
   new MutationObserver(() => (motionOn() ? start() : stop())).observe(document.documentElement, {
@@ -216,4 +341,3 @@ export function bootCats(world: HTMLElement): void {
     attributeFilter: ['data-motion'],
   });
 }
-

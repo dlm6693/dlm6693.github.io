@@ -1,13 +1,14 @@
-/* Status strip under the HUD: real GitHub totals, counted up once on load. */
-.meter {
+/* Contribution totals, sitting with the yearly towers. */
+.years-scene .meter {
   position: relative;
   z-index: 4;
   display: flex;
   flex-wrap: wrap;
   gap: 0.15rem 1.25rem;
-  padding: 0.35rem var(--pad);
-  border-bottom: 1px solid var(--line);
-  background: rgb(7 11 20 / 0.55);
+  margin: 0.2rem 0 0.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
   font-family: var(--mono);
   font-size: 0.72rem;
   color: var(--muted);

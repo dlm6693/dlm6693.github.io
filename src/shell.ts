@@ -1,4 +1,4 @@
-import {bootCats, wanderers} from './cats.ts';
+import {bootCats} from './cats.ts';
 import {NAV, SITE, type NavId} from './content.ts';
 import {mountCounter} from './counter.ts';
 import {loadActivity} from './data.ts';
@@ -33,7 +33,6 @@ export function mount(active: NavId, inner: string): void {
       <span class="sparks" aria-hidden="true"><i></i><i></i><i></i></span>
     </header>
     <main id="content">${inner}</main>
-    ${wanderers()}
     <footer class="foot">
       <p>Queens, NYC</p>
       <ul>
@@ -45,15 +44,17 @@ export function mount(active: NavId, inner: string): void {
   bootMotion();
 
   const world = document.querySelector<HTMLElement>('.world')!;
-  const hud = document.querySelector<HTMLElement>('.hud')!;
   mountSky(world);
-  bootCats(world);
   void loadActivity().then(activity => {
-    mountCounter(hud, activity);
-    const scene = document.querySelector<HTMLElement>('.city-scene');
-    if (scene) {
-      mountStreet(scene, activity);
-      mountYears(scene, activity);
+    if (active === 'home') {
+      const city = document.querySelector<HTMLElement>('.city-scene');
+      if (city) {
+        mountStreet(city, activity);
+        mountYears(city, activity);
+        const years = document.querySelector<HTMLElement>('.years-scene');
+        if (years) mountCounter(years, activity);
+      }
     }
+    bootCats(world);
   });
 }

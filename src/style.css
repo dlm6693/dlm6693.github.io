@@ -178,7 +178,7 @@ a:hover { color: var(--bright); }
   box-shadow: 0 0 0 1px rgb(240 180 41 / 0.35);
 }
 
-.stage {
+.opening {
   padding: clamp(1.25rem, 3vw, 2rem) var(--pad) 0.5rem;
 }
 
@@ -221,40 +221,33 @@ a:hover { color: var(--bright); }
   text-decoration: none;
   box-shadow: 3px 3px 0 rgb(62 224 255 / 0.25);
 }
-.btn:hover { border-color: var(--cyan); color: var(--cyan); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--violet); }
+.btn:hover, .btn:focus-visible { border-color: var(--cyan); color: var(--cyan); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--violet); }
 .btn:active { transform: translate(1px, 1px); box-shadow: none; }
 .btn-primary { border-color: var(--cyan); color: var(--cyan); }
 
 .city-scene { padding: 0.5rem var(--pad) 1.4rem; }
 .city-scene figure { margin: 0; }
-.city-scene picture { display: block; }
-.city-scene img {
+.city-frame { overflow: hidden; }
+.city-frame picture { display: block; }
+.city-frame img {
   display: block;
   width: 100%;
   height: auto;
+  margin-top: -5.4%;
+  clip-path: inset(7% 0 0 0);
   border: 1px solid var(--line);
   box-shadow: 0 0 40px rgb(176 107 255 / 0.25), 6px 6px 0 rgb(62 224 255 / 0.18);
+}
+@media (max-width: 800px) {
+  .city-frame img { margin-top: -11%; clip-path: inset(12% 0 0 0); }
 }
 .city-scene figcaption { max-width: 68ch; margin-top: 0.75rem; color: var(--muted); font-size: 0.9375rem; }
 .city-scene figcaption p { margin: 0 0 0.35rem; }
 .credit { color: var(--muted); font-size: 0.75rem; }
 
-.wander {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow: hidden;
-  pointer-events: none;
-  container-type: inline-size;
-}
 .hud, .foot { position: relative; z-index: 4; }
-.walker { position: absolute; width: 4.4rem; left: 0; }
-.walker.bicolor { top: 26%; left: 10%; }
-.walker.mackerel { top: 58%; left: 46%; }
-.walker.tuxedo { top: 78%; left: 72%; }
-.walker svg { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 
-.panel { margin: 0 var(--pad) 1.25rem; padding: 1.1rem 0 0; border-top: 1px solid var(--line); }
+.panel { position: relative; margin: 0 var(--pad) 1.25rem; padding: 1.1rem 0 0; border-top: 1px solid var(--line); }
 .panel h2 { margin: 0 0 0.9rem; }
 .kicker {
   color: var(--amber);
@@ -304,7 +297,7 @@ a:hover { color: var(--bright); }
   font-weight: 700;
   text-decoration: none;
 }
-.tile:hover { border-color: var(--magenta); color: var(--bright); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--cyan); }
+.tile:hover, .tile:focus-visible { border-color: var(--magenta); color: var(--bright); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--cyan); }
 .tile:active { transform: none; box-shadow: none; }
 .sticker {
   --tilt: -6deg;
@@ -336,20 +329,8 @@ a:hover { color: var(--bright); }
   image-rendering: pixelated;
   flex: none;
 }
-html[data-motion='on'] .sticker { animation: wobble 4.2s ease-in-out infinite; }
-html[data-motion='on'] .sticker-go { animation-delay: -0.6s; }
-html[data-motion='on'] .sticker-python { animation-delay: -1.4s; }
-html[data-motion='on'] .sticker-java { animation-delay: -2.1s; }
-html[data-motion='on'] .sticker-kafka { animation-delay: -0.9s; }
-html[data-motion='on'] .sticker-aws { animation-delay: -1.8s; }
-html[data-motion='on'] .sticker-nyt { animation-delay: -2.6s; }
 .tile:hover .sticker,
-.entry:hover .sticker,
-.mini-log li:hover .sticker { animation: none; transform: rotate(0deg) translateY(-2px); }
-@keyframes wobble {
-  0%, 100% { transform: rotate(var(--tilt)); }
-  50% { transform: rotate(calc(var(--tilt) * -0.4)); }
-}
+.tile:focus-visible .sticker { transform: rotate(0deg) translateY(-2px); }
 
 .screen { padding: clamp(1.25rem, 3vw, 2rem) var(--pad) 0.5rem; }
 .stamp { margin: -0.2rem 0 0.7rem; color: var(--amber); font-family: var(--mono); font-size: 0.8125rem; }
@@ -397,9 +378,10 @@ html[data-motion='on'] .sticker-nyt { animation-delay: -2.6s; }
 
 @media (max-width: 640px) {
   .nav { flex-basis: 100%; margin-left: 0; }
-  .stage { padding-top: 1rem; }
+  .opening { padding-top: 1rem; }
 }
 
+html[data-motion='on'] .city-scene.in .city-frame { animation: rise 0.7s both; }
 html[data-motion='on'] .stage-copy > * { animation: rise 0.55s both; }
 html[data-motion='on'] .stage-copy > *:nth-child(2) { animation-delay: 0.06s; }
 html[data-motion='on'] .stage-copy > *:nth-child(3) { animation-delay: 0.12s; }

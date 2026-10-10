@@ -28,9 +28,8 @@ function car(i: number, lane: number, rest: number): string {
 }
 
 export function mountStreet(scene: HTMLElement, activity: Activity | null): void {
-  const figure = scene.querySelector('figure');
-  const picture = figure?.querySelector('picture');
-  if (!figure || !picture || figure.querySelector('.el')) return;
+  const slot = scene.querySelector('.rail-slot') ?? scene;
+  if (slot.querySelector('.el')) return;
 
   const tempo = activity?.tempo ?? 0.15;
   const run = Math.round(38 - tempo * 22);
@@ -42,7 +41,7 @@ export function mountStreet(scene: HTMLElement, activity: Activity | null): void
   el.innerHTML = `<div class="el-rail"></div>
     <div class="el-train" style="--run:${run}s">${train()}</div>
     <div class="el-train back" style="--run:${run + 7}s">${train()}</div>`;
-  picture.before(el);
+  slot.append(el);
 
   const street = document.createElement('div');
   street.className = 'street';
@@ -50,7 +49,7 @@ export function mountStreet(scene: HTMLElement, activity: Activity | null): void
   const cars: string[] = [];
   for (let i = 0; i < count; i++) cars.push(car(i, i % 2, 8 + ((i * 17) % 78)));
   street.innerHTML = cars.join('');
-  picture.after(street);
+  slot.append(street);
 
   const note = document.createElement('p');
   note.className = 'street-note';

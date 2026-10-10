@@ -72,7 +72,7 @@ Single project guidance file for this repo. Do not create `CLAUDE.md` or other g
 - The skyline is the model: a scene built from real data about David, with things moving through it. Add to that; do not add labeled sticker rows or mascots.
 - Current scenes, each its own module (`src/<name>.ts` + `src/<name>.css`, wired in `shell.ts`):
   - `sky`: page sky by New York time of day (sunrise/sunset for Queens, moon phase) plus live Queens weather from Open-Meteo. Fails quietly to a plain sky.
-  - `street`: an elevated 7 train above the skyline and street traffic below it, paced by the last 7 days of contributions.
+  - `street`: an elevated 7 train above the skyline and street traffic below it, paced by the last 7 days of contributions. A fire escape at the end of the rail. Puddles only when the sky's weather is wet, a snow line only when it is snowing, and leaves at the curb in September through November. Cats sometimes sit at a puddle.
   - `counter`: a status strip of real GitHub totals (contributions, streaks, last 7 days) that counts up once.
   - `years`: one tower per year on GitHub from `stats.years`, the long view under the daily city.
   - `cats`: the three real cats roam the page and chase a tennis ball. The ball comes to rest off the text.

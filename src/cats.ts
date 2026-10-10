@@ -63,7 +63,7 @@ export function wanderers(): string {
   return '';
 }
 
-type Mood = 'run' | 'towers' | 'skyline' | 'chase' | 'traffic';
+type Mood = 'run' | 'towers' | 'skyline' | 'chase' | 'traffic' | 'puddle';
 type Cat = {el: HTMLElement; x: number; y: number; timer?: number; mood: Mood; at: number; quarry?: HTMLElement};
 
 const WALK = 78;
@@ -144,7 +144,16 @@ export function bootCats(world: HTMLElement): void {
     if (roofs().length > 1) moods.push('towers');
     if (skyline().length) moods.push('skyline');
     if (document.querySelector('.car, .el-train')) moods.push('traffic');
+    if (puddles().length) moods.push('puddle');
     return moods.filter(m => m !== c.mood).concat(c.mood);
+  };
+
+  const puddles = () => {
+    const origin = play.getBoundingClientRect();
+    return [...document.querySelectorAll<HTMLElement>('.puddle')]
+      .map(el => el.getBoundingClientRect())
+      .filter(r => r.width > 0 && r.bottom > 0 && r.top < window.innerHeight)
+      .map(r => ({x: r.left - origin.left + r.width / 2 - CAT / 2, y: r.top - origin.top - tall() + 6}));
   };
 
   const ground = () => {
@@ -279,6 +288,17 @@ export function bootCats(world: HTMLElement): void {
         return;
       }
       move(c, x, y, () => act(c));
+      return;
+    }
+    if (c.mood === 'puddle') {
+      const spots = puddles();
+      if (!spots.length) {
+        c.mood = 'run';
+        act(c);
+        return;
+      }
+      const spot = pick(spots);
+      move(c, spot.x, spot.y, () => rest(c, () => act(c), 1600, 3200));
       return;
     }
     if (c.mood === 'chase') {

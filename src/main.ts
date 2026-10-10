@@ -1,109 +1,67 @@
 import './style.css';
-import {ABOUT_TEASER, CREDIT, EXPERIENCE, SITE, STACK} from './content.ts';
+import {CREDIT, INTERESTS, INTRO, LANGUAGES, SITE, THROUGH_LINE, WORK} from './content.ts';
 import {esc, mount} from './shell.ts';
 
-const roles = EXPERIENCE.map(
-  (r, i) => `
-  <article class="role" style="animation-delay:${(0.05 * i).toFixed(2)}s">
-    <div class="when">${esc(r.when)}</div>
-    <div>
-      <h3>${esc(r.role)} <span class="at">@</span> <span class="org">${esc(r.org)}</span></h3>
-      <p>${esc(r.blurb)}</p>
-      <div class="tags">${r.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
-    </div>
-  </article>`,
+const work = WORK.map(
+  r => `
+    <li class="job">
+      <div class="job-meta">
+        <h3 class="job-org">${esc(r.org)}${r.current ? ' <span class="tag-current">current</span>' : ''}</h3>
+        <p class="job-title">${esc(r.title)}</p>
+      </div>
+      <p class="job-summary">${esc(r.summary)}</p>
+    </li>`,
 ).join('');
 
-const stackRows = STACK.map(
-  (s, i) => `
-  <div class="stack-row" style="animation-delay:${(0.04 * i).toFixed(2)}s">
-    <span class="k">${esc(s.name)}</span>
-    <span class="dots" aria-hidden="true"></span>
-    <span class="v">${esc(s.value)}</span>
-  </div>`,
-).join('');
+const {desktop, phone} = SITE.skyline;
 
 mount(
   'home',
   `
-      <section class="hero" id="top">
-        <p class="prompt"><span class="ok">$</span> identity<span class="cursor" aria-hidden="true"></span></p>
-        <h1 class="brand">${esc(SITE.name)}</h1>
-        <div class="meter-bar" aria-hidden="true"></div>
-        <p class="tagline">${esc(SITE.title)}</p>
-        <p class="focus">${esc(SITE.focus)} <span class="amp">·</span> ${esc(SITE.location)}</p>
-        <div class="hero-cta">
-          <a class="btn" href="/about/">Bio</a>
-          <a class="btn secondary" href="/now/">Now</a>
-          <a class="btn secondary" href="${esc(SITE.linkedin)}" rel="noopener noreferrer" target="_blank">LinkedIn</a>
-        </div>
-      </section>
+    <section class="hero" aria-labelledby="hero-name">
+      <p class="prompt"><span class="ps1">dlm@queens</span>:~$ whoami</p>
+      <h1 id="hero-name" class="name">${esc(SITE.name)}</h1>
+      <p class="intro">${esc(INTRO)}</p>
+      <p class="through">${esc(THROUGH_LINE)}</p>
+      <ul class="actions">
+        <li><a class="btn btn-primary" href="/about/">Read the bio</a></li>
+        <li><a class="btn" href="${esc(SITE.github)}">GitHub</a></li>
+        <li><a class="btn" href="${esc(SITE.linkedin)}">LinkedIn</a></li>
+      </ul>
+    </section>
 
-      <section class="section about" id="about">
-        <div class="section-head">
-          <h2><span class="path">~/</span>teaser</h2>
-          <span class="counter">// 01</span>
-        </div>
-        <p class="cmd"><span class="ok">$</span> head -n 2 about.md</p>
-        ${ABOUT_TEASER.map(p => `<p>${esc(p)}</p>`).join('')}
-        <p class="more"><a href="/about/">read the full bio →</a></p>
-      </section>
+    <section class="section" aria-labelledby="work-heading">
+      <h2 id="work-heading" class="label">work</h2>
+      <ol class="work">${work}</ol>
+    </section>
 
-      <section class="section" id="stack">
-        <div class="section-head">
-          <h2><span class="path">~/</span>stack</h2>
-          <span class="counter">// 02</span>
-        </div>
-        <p class="cmd"><span class="ok">$</span> kubectl get tools -n billing</p>
-        <div class="stack-list">${stackRows}</div>
-      </section>
+    <section class="section" aria-labelledby="interests-heading">
+      <h2 id="interests-heading" class="label">interests</h2>
+      <p class="prose-block">${esc(INTERESTS)}</p>
+      <p class="meta-line"><span class="meta-key">languages</span>${LANGUAGES.map(esc).join(' · ')}</p>
+    </section>
 
-      <section class="section" id="path">
-        <div class="section-head">
-          <h2><span class="path">~/</span>path</h2>
-          <span class="counter">// 03</span>
-        </div>
-        <p class="cmd"><span class="ok">$</span> history --roles</p>
-        <div class="timeline">${roles}</div>
-      </section>
-
-      <section class="section" id="skyline">
-        <div class="section-head">
-          <h2><span class="path">~/</span>skyline</h2>
-          <span class="counter">// 04</span>
-        </div>
-        <p class="cmd"><span class="ok">$</span> render --graph 365d</p>
-        <div class="city-wrap">
-          <picture>
-            <source media="(max-width: 600px)" srcset="${esc(SITE.profileCityPhone)}" />
-            <img
-              src="${esc(SITE.profileCity)}"
-              alt="Isometric contribution skyline from David Miller's GitHub activity"
-              width="880"
-              height="680"
-              loading="lazy"
-            />
-          </picture>
-        </div>
-        <p class="credit">
-          Regenerates with the
-          <a href="${esc(SITE.github)}/${esc(SITE.handle)}">GitHub profile</a>.
-          City technique by
-          <a href="${esc(CREDIT.url)}">${esc(CREDIT.name)}</a>
-          (<a href="${esc(CREDIT.post)}">writeup</a>), MIT.
-        </p>
-      </section>
-
-      <section class="section" id="contact">
-        <div class="section-head">
-          <h2><span class="path">~/</span>connect</h2>
-          <span class="counter">// 05</span>
-        </div>
-        <p class="cmd"><span class="ok">$</span> open --url …</p>
-        <div class="contact-row">
-          <a class="btn" href="${esc(SITE.linkedin)}" rel="noopener noreferrer" target="_blank">LinkedIn</a>
-          <a class="btn secondary" href="${esc(SITE.github)}" rel="noopener noreferrer" target="_blank">GitHub</a>
-        </div>
-      </section>
+    <section class="section skyline" aria-labelledby="skyline-heading">
+      <h2 id="skyline-heading" class="visually-hidden">Contribution skyline</h2>
+      <figure>
+        <picture>
+          <source media="(max-width: 600px)" srcset="${esc(phone.src)}" width="${phone.width}" height="${phone.height}" />
+          <img
+            src="${esc(desktop.src)}"
+            width="${desktop.width}"
+            height="${desktop.height}"
+            alt="My GitHub contributions over the last year drawn as an isometric city, one building per day."
+            loading="lazy"
+            decoding="async"
+          />
+        </picture>
+        <figcaption>
+          <p>My GitHub contributions over the last year, as a city: one building per day, regenerated from my
+          <a href="${esc(SITE.github)}/${esc(SITE.handle)}">profile</a> every few hours. A fun artifact, not a measure of anything important.</p>
+          <p class="credit">City generator adapted from <a href="${esc(CREDIT.url)}">${esc(CREDIT.name)}’s profile console</a>
+          (MIT; <a href="${esc(CREDIT.post)}">how he built it</a>).</p>
+        </figcaption>
+      </figure>
+    </section>
 `,
 );

@@ -8,40 +8,28 @@ export function esc(s: string): string {
     .replace(/"/g, '&quot;');
 }
 
-export function navHtml(active: NavId): string {
+function navHtml(active: NavId): string {
   return NAV.map(item => {
-    const cls = item.id === active ? 'nav-link active' : 'nav-link';
-    const aria = item.id === active ? ' aria-current="page"' : '';
-    return `<a class="${cls}" href="${esc(item.href)}"${aria}>${esc(item.label)}</a>`;
+    const current = item.id === active ? ' aria-current="page"' : '';
+    return `<li><a href="${esc(item.href)}"${current}>${esc(item.label)}</a></li>`;
   }).join('');
 }
 
-export function openShell(active: NavId, inner: string): string {
-  return `
-  <div class="shell">
-    <aside class="rail" aria-hidden="true">
-      <div class="ticks"></div>
-      <span class="rail-label">QNS</span>
-    </aside>
-
-    <main class="panel">
-      <div class="statusbar">
-        <span>METER://BILLING // LOC:QNS</span>
-        <span class="right"><span class="dot" aria-hidden="true"></span><span>HP OK · ALERTS ARMED</span></span>
-      </div>
-      <nav class="topnav" aria-label="Primary">
-        <a class="brand-mini" href="/">${esc(SITE.name)}</a>
-        <div class="nav-links">${navHtml(active)}</div>
-      </nav>
-      ${inner}
-      <footer class="footer">
-        <span><span class="ok">$</span> exit — see you around <a href="${esc(SITE.github)}">${esc(SITE.handle)}</a>.</span>
-        <span class="eof">// Queens</span>
-      </footer>
-    </main>
-  </div>`;
-}
-
 export function mount(active: NavId, inner: string): void {
-  document.querySelector<HTMLDivElement>('#app')!.innerHTML = openShell(active, inner);
+  document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
+  <a class="skip-link" href="#content">Skip to content</a>
+  <div class="frame">
+    <header class="topbar">
+      <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"></span>${esc(SITE.name)}</a>
+      <nav aria-label="Primary"><ul class="nav">${navHtml(active)}</ul></nav>
+    </header>
+    <main id="content" tabindex="-1">${inner}</main>
+    <footer class="footer">
+      <p>Written in ${esc(SITE.location)}.</p>
+      <ul class="footer-links">
+        <li><a href="${esc(SITE.github)}">GitHub</a></li>
+        <li><a href="${esc(SITE.linkedin)}">LinkedIn</a></li>
+      </ul>
+    </footer>
+  </div>`;
 }

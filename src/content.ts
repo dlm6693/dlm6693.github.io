@@ -33,6 +33,7 @@ export type Role = {
   org: string;
   title: string;
   emblem: EmblemId;
+  href: string;
   current?: boolean;
   summary: string;
 };
@@ -43,6 +44,7 @@ export const WORK: Role[] = [
     org: 'CoreWeave',
     title: 'Senior Software Engineer',
     emblem: 'coreweave',
+    href: 'https://www.coreweave.com',
     current: true,
     summary:
       'Billing infrastructure for GPU cloud computing: metering usage and processing infrastructure usage data reliably enough to bill from. Mostly Go, on Kubernetes.',
@@ -51,12 +53,14 @@ export const WORK: Role[] = [
     org: 'The New York Times',
     title: 'Senior Software Engineer',
     emblem: 'nyt',
+    href: 'https://www.nytimes.com',
     summary: 'Backend systems for the Times’ subscription platform.',
   },
   {
     org: 'AWS',
     title: 'Software Development Engineer',
     emblem: 'aws',
+    href: 'https://aws.amazon.com',
     summary: 'Worked on boto3, the AWS SDK for Python.',
   },
 ];

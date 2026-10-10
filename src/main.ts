@@ -6,12 +6,14 @@ import {esc, mount} from './shell.ts';
 const log = WORK.map(
   role => `
     <li class="entry${role.current ? ' is-current' : ''}">
-      <div class="entry-mark">${emblem(role.emblem)}</div>
-      <div>
-        <h3>${esc(role.org)}${role.current ? ' <span class="now-tag">current</span>' : ''}</h3>
-        <p class="role">${esc(role.title)}</p>
-        <p>${esc(role.summary)}</p>
-      </div>
+      <a class="entry-link" href="${esc(role.href)}">
+        <span class="entry-mark">${emblem(role.emblem)}</span>
+        <div class="entry-name">
+          <h3 class="entry-org">${esc(role.org)}${role.current ? ' <span class="now-tag">current</span>' : ''}</h3>
+          <p class="role">${esc(role.title)}</p>
+        </div>
+      </a>
+      <p>${esc(role.summary)}</p>
     </li>`,
 ).join('');
 

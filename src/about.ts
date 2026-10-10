@@ -4,7 +4,9 @@ import {emblem} from './emblems.ts';
 import {esc, mount} from './shell.ts';
 
 const facts = BIO.facts.map(fact => `<div><dt>${esc(fact.label)}</dt><dd>${esc(fact.value)}</dd></div>`).join('');
-const marks = WORK.map(role => `<li>${emblem(role.emblem)}<span>${esc(role.org)}</span></li>`).join('');
+const marks = WORK.map(
+  role => `<li><a class="mini-link" href="${esc(role.href)}">${emblem(role.emblem)}<span>${esc(role.org)}</span></a></li>`,
+).join('');
 
 mount(
   'about',

@@ -1,0 +1,35 @@
+name: refresh-city
+
+on:
+  schedule:
+    - cron: "47 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Pull latest city SVGs and calendar from profile repo
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -o public/contribution-city.svg \
+            https://raw.githubusercontent.com/dlm6693/dlm6693/main/assets/contribution-city.svg
+          curl -fsSL -o public/contribution-city-phone.svg \
+            https://raw.githubusercontent.com/dlm6693/dlm6693/main/assets/phone/contribution-city.svg
+          curl -fsSL -o public/data/calendar.json \
+            https://raw.githubusercontent.com/dlm6693/dlm6693/main/data/calendar.json
+          git add public/contribution-city.svg public/contribution-city-phone.svg public/data/calendar.json
+          if git diff --cached --quiet; then
+            echo "city assets unchanged"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: refresh contribution city"
+          git push

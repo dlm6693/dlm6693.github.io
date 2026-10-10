@@ -1,21 +1,19 @@
 :root {
-  --bg: #0c0c0b;
-  --bg-elev: #141311;
-  --well: #1a1916;
-  --fg: #e8e6e0;
-  --bright: #fff8e7;
-  --dim: #9a9890;
-  --faint: #75736c;
-  --fainter: #4d4b45;
-  --amber: #e8b84b;
-  --amber-hot: #ffd36e;
-  --cyan: #7dcfff;
-  --ok: #6ee79a;
-  --accent2: #ff5f3a;
-  --rail: color-mix(in srgb, var(--amber) 70%, transparent);
-  --glow: color-mix(in srgb, var(--amber) 45%, transparent);
+  --bg: #070b12;
+  --bg-elev: #0e1520;
+  --well: #121a26;
+  --fg: #d7e2ef;
+  --bright: #f4f8ff;
+  --dim: #8b9bb0;
+  --faint: #6a7a8f;
+  --fainter: #3d4a5c;
+  --ice: #6ec8ff;
+  --ice-hot: #9ae8ff;
+  --ok: #5ddea6;
+  --rail: color-mix(in srgb, var(--ice) 70%, transparent);
+  --glow: color-mix(in srgb, var(--ice) 40%, transparent);
   --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  --max: 880px;
+  --max: 920px;
   --pad: clamp(1rem, 4vw, 2.5rem);
 }
 
@@ -49,9 +47,9 @@ body {
   line-height: 1.55;
   color: var(--fg);
   background:
-    radial-gradient(1200px 600px at 80% -10%, color-mix(in srgb, var(--amber) 12%, transparent), transparent 60%),
-    radial-gradient(900px 500px at 10% 20%, color-mix(in srgb, var(--cyan) 8%, transparent), transparent 55%),
-    linear-gradient(180deg, #12110f 0%, var(--bg) 40%, #080807 100%);
+    radial-gradient(1000px 520px at 85% -5%, color-mix(in srgb, var(--ice) 14%, transparent), transparent 55%),
+    radial-gradient(700px 420px at 0% 30%, color-mix(in srgb, var(--ok) 6%, transparent), transparent 50%),
+    linear-gradient(180deg, #0a1018 0%, var(--bg) 45%, #05080d 100%);
   background-attachment: fixed;
 }
 
@@ -63,20 +61,19 @@ body {
   background: repeating-linear-gradient(
     to bottom,
     transparent 0,
-    transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 3px
+    transparent 3px,
+    rgba(0, 0, 0, 0.06) 3px,
+    rgba(0, 0, 0, 0.06) 4px
   );
-  mix-blend-mode: multiply;
-  opacity: 0.35;
+  opacity: 0.28;
 }
 
 a {
-  color: var(--cyan);
+  color: var(--ice-hot);
   text-decoration: none;
 }
 a:hover {
-  color: var(--amber-hot);
+  color: var(--bright);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -87,62 +84,48 @@ a:hover {
   padding: var(--pad);
 }
 
-.console {
+.shell {
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  gap: 0;
+}
+
+.rail {
   position: relative;
-  border: 1.2px solid var(--amber);
-  box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--amber) 20%, transparent),
-    0 0 40px -8px var(--glow),
-    inset 0 0 80px -40px color-mix(in srgb, var(--amber) 15%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--ice) 45%, transparent);
+  margin: 0.5rem 0;
+}
+.rail .ticks {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 10px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ice) 0,
+    var(--ice) 1px,
+    transparent 1px,
+    transparent 18px
+  );
+  opacity: 0.35;
+}
+.rail-label {
+  position: sticky;
+  top: 40%;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--faint);
+  padding: 0.5rem 0;
+}
+
+.panel {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--ice) 40%, transparent);
   background:
-    linear-gradient(var(--bg), var(--bg)) padding-box,
-    linear-gradient(135deg, color-mix(in srgb, var(--amber) 25%, transparent), transparent 40%) border-box;
-}
-
-.console::before,
-.console::after {
-  content: '';
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--amber);
-  pointer-events: none;
-}
-.console::before {
-  top: -1px;
-  left: -1px;
-  border-right: 0;
-  border-bottom: 0;
-}
-.console::after {
-  top: -1px;
-  right: -1px;
-  border-left: 0;
-  border-bottom: 0;
-}
-
-.console-foot {
-  position: relative;
-}
-.console-foot::before,
-.console-foot::after {
-  content: '';
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--amber);
-  pointer-events: none;
-  bottom: -1px;
-}
-.console-foot::before {
-  left: -1px;
-  border-right: 0;
-  border-top: 0;
-}
-.console-foot::after {
-  right: -1px;
-  border-left: 0;
-  border-top: 0;
+    linear-gradient(180deg, color-mix(in srgb, var(--ice) 4%, var(--bg)) 0%, var(--bg) 28%),
+    var(--bg);
+  box-shadow: 0 0 48px -16px var(--glow);
 }
 
 .statusbar {
@@ -151,14 +134,13 @@ a:hover {
   gap: 1rem;
   align-items: center;
   padding: 0.65rem 1rem;
-  background: color-mix(in srgb, var(--amber) 8%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--amber) 45%, transparent);
+  background: color-mix(in srgb, var(--ice) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--ice) 35%, transparent);
   font-size: 12px;
   letter-spacing: 0.08em;
-  color: var(--amber);
+  color: var(--ice);
   text-transform: uppercase;
 }
-
 .statusbar .right {
   display: flex;
   align-items: center;
@@ -187,28 +169,11 @@ a:hover {
 }
 
 .hero {
-  min-height: min(88vh, 720px);
+  min-height: min(78vh, 640px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(1.5rem, 5vw, 3rem) clamp(1.1rem, 4vw, 2.5rem) 2rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent 0,
-    transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 3px
-  );
-  pointer-events: none;
-  opacity: 0.4;
+  padding: clamp(1.75rem, 5vw, 3.25rem) clamp(1.1rem, 4vw, 2.5rem) 2.25rem;
 }
 
 .prompt {
@@ -222,49 +187,58 @@ a:hover {
 
 .brand {
   margin: 0;
-  font-size: clamp(2.4rem, 8vw, 4.4rem);
+  font-size: clamp(2.6rem, 9vw, 4.6rem);
   font-weight: 800;
-  letter-spacing: 0.04em;
-  line-height: 1.05;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
   color: var(--bright);
-  text-shadow:
-    0 0 24px color-mix(in srgb, var(--amber) 55%, transparent),
-    2px 0 0 color-mix(in srgb, var(--accent2) 40%, transparent),
-    -2px 0 0 color-mix(in srgb, var(--cyan) 35%, transparent);
-  animation: flicker 0.9s linear 0.4s both;
+  text-shadow: 0 0 28px color-mix(in srgb, var(--ice) 45%, transparent);
+  animation: rise 0.55s ease-out both;
 }
 
-@keyframes flicker {
-  0% {
+@keyframes rise {
+  from {
     opacity: 0;
+    transform: translateY(8px);
   }
-  10% {
+  to {
     opacity: 1;
+    transform: none;
   }
-  14% {
-    opacity: 0.2;
+}
+
+.meter-bar {
+  width: min(220px, 40%);
+  height: 3px;
+  margin: 1rem 0 1.25rem;
+  background: var(--ice);
+  transform-origin: left center;
+  animation: meter 0.8s ease-out 0.35s both;
+  box-shadow: 0 0 12px var(--glow);
+}
+
+@keyframes meter {
+  from {
+    transform: scaleX(0);
   }
-  22% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 0.4;
-  }
-  40%,
-  100% {
-    opacity: 1;
+  to {
+    transform: scaleX(1);
   }
 }
 
 .tagline {
-  margin: 1.25rem 0 0;
-  max-width: 36ch;
-  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  margin: 0;
+  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
   color: var(--fg);
+  font-weight: 600;
 }
-.tagline .amp {
-  color: var(--amber);
-  font-weight: 700;
+.focus {
+  margin: 0.45rem 0 0;
+  color: var(--dim);
+  font-size: 0.95rem;
+}
+.focus .amp {
+  color: var(--ice);
 }
 
 .hero-cta {
@@ -272,8 +246,6 @@ a:hover {
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 2rem;
-  position: relative;
-  z-index: 1;
 }
 
 .btn {
@@ -281,15 +253,14 @@ a:hover {
   align-items: center;
   gap: 0.5rem;
   padding: 0.7rem 1.1rem;
-  border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent);
-  background: color-mix(in srgb, var(--amber) 6%, transparent);
-  color: var(--amber);
+  border: 1px solid color-mix(in srgb, var(--ice) 55%, transparent);
+  background: color-mix(in srgb, var(--ice) 7%, transparent);
+  color: var(--ice-hot);
   font: inherit;
   font-weight: 700;
   font-size: 13px;
   letter-spacing: 0.04em;
   cursor: pointer;
-  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -297,21 +268,21 @@ a:hover {
     transform 0.2s ease;
 }
 .btn:hover {
-  background: color-mix(in srgb, var(--amber) 16%, transparent);
+  background: color-mix(in srgb, var(--ice) 16%, transparent);
   color: var(--bright);
-  border-color: var(--amber);
+  border-color: var(--ice);
   text-decoration: none;
   transform: translateY(-1px);
 }
 .btn.secondary {
-  border-color: color-mix(in srgb, var(--cyan) 50%, transparent);
-  color: var(--cyan);
-  background: color-mix(in srgb, var(--cyan) 6%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 6%, transparent);
 }
 .btn.secondary:hover {
-  border-color: var(--cyan);
+  border-color: var(--ok);
   color: var(--bright);
-  background: color-mix(in srgb, var(--cyan) 14%, transparent);
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
 }
 
 .cursor {
@@ -319,7 +290,7 @@ a:hover {
   width: 10px;
   height: 1.05em;
   margin-left: 4px;
-  background: var(--amber);
+  background: var(--ice);
   vertical-align: text-bottom;
   animation: blink 1.05s step-end infinite;
   box-shadow: 0 0 8px var(--glow);
@@ -337,8 +308,8 @@ a:hover {
 }
 
 .section {
-  padding: clamp(2rem, 5vw, 3.5rem) clamp(1.1rem, 4vw, 2.5rem);
-  border-top: 1px solid color-mix(in srgb, var(--amber) 25%, transparent);
+  padding: clamp(2rem, 5vw, 3.25rem) clamp(1.1rem, 4vw, 2.5rem);
+  border-top: 1px solid color-mix(in srgb, var(--ice) 18%, transparent);
 }
 
 .section-head {
@@ -350,12 +321,12 @@ a:hover {
 }
 .section-head h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--bright);
 }
 .section-head h2 .path {
-  color: var(--amber);
+  color: var(--ice);
 }
 .section-head .counter {
   color: var(--faint);
@@ -384,6 +355,35 @@ a:hover {
   margin-bottom: 0;
 }
 
+.stack-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  max-width: 52rem;
+}
+.stack-row {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr auto;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.45rem 0;
+  border-bottom: 1px dashed color-mix(in srgb, var(--fainter) 55%, transparent);
+}
+.stack-row .k {
+  color: var(--ice);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.stack-row .dots {
+  border-bottom: 1px dotted var(--fainter);
+  height: 0.7em;
+}
+.stack-row .v {
+  color: var(--fg);
+  text-align: right;
+}
+
 .timeline {
   display: flex;
   flex-direction: column;
@@ -395,20 +395,20 @@ a:hover {
   grid-template-columns: 7rem 1fr;
   gap: 1rem 1.25rem;
   padding: 1rem 1.1rem;
-  border: 1px solid color-mix(in srgb, var(--amber) 28%, transparent);
-  background: color-mix(in srgb, var(--amber) 3.5%, transparent);
+  border-left: 2px solid color-mix(in srgb, var(--ice) 55%, transparent);
+  background: color-mix(in srgb, var(--ice) 4%, transparent);
   transition:
     border-color 0.2s ease,
     background 0.2s ease,
     transform 0.2s ease;
 }
 .role:hover {
-  border-color: color-mix(in srgb, var(--amber) 70%, transparent);
-  background: color-mix(in srgb, var(--amber) 8%, transparent);
+  border-color: var(--ice);
+  background: color-mix(in srgb, var(--ice) 9%, transparent);
   transform: translateX(4px);
 }
 .role .when {
-  color: var(--amber);
+  color: var(--ice);
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -425,7 +425,7 @@ a:hover {
   font-weight: 400;
 }
 .role h3 .org {
-  color: var(--cyan);
+  color: var(--ice-hot);
 }
 .role p {
   margin: 0 0 0.75rem;
@@ -471,7 +471,7 @@ a:hover {
 
 .footer {
   padding: 1.25rem clamp(1.1rem, 4vw, 2.5rem) 1.5rem;
-  border-top: 1px solid color-mix(in srgb, var(--amber) 25%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--ice) 18%, transparent);
   color: var(--dim);
   font-size: 13px;
   display: flex;
@@ -484,14 +484,27 @@ a:hover {
 }
 
 @media (max-width: 640px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+  .rail {
+    display: none;
+  }
   .role {
     grid-template-columns: 1fr;
     gap: 0.35rem;
   }
+  .stack-row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+  .stack-row .dots {
+    display: none;
+  }
+  .stack-row .v {
+    text-align: left;
+  }
   .statusbar {
     font-size: 10px;
-  }
-  .statusbar .right span:last-child {
-    display: none;
   }
 }

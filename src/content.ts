@@ -2,18 +2,18 @@ export const SITE = {
   name: 'David Miller',
   handle: 'dlm6693',
   title: 'Software engineer · CoreWeave',
+  focus: 'Go · Kubernetes · billing platforms',
   location: 'Queens, NY',
   github: 'https://github.com/dlm6693',
   linkedin: 'https://www.linkedin.com/in/david-l-miller',
-  // Local copies refreshed from the profile repo by .github/workflows/refresh-city.yml
   profileCity: '/contribution-city.svg',
   profileCityPhone: '/contribution-city-phone.svg',
 };
 
 export const ABOUT = [
-  'I build backend systems for AI infrastructure billing at CoreWeave — the meters, ledgers, and APIs that keep hyperscale usage honest.',
-  'Before that I maintained the AWS Python SDK (boto3) and worked on backend systems at The New York Times.',
-  'NYC native, living in Queens with my wife and three cats. Mostly Python, Java, and Go.',
+  'I build billing systems for AI infrastructure at CoreWeave — mostly Go on Kubernetes: services, APIs, the meters and ledgers finance and customers both trust.',
+  'Earlier I maintained the AWS Python SDK (boto3) and worked backend at The New York Times. Python and Java are still in the toolkit; day-to-day is cloud-native Go.',
+  'NYC native, living in Queens with my wife and three cats.',
 ];
 
 export type Role = {
@@ -30,15 +30,15 @@ export const EXPERIENCE: Role[] = [
     role: 'Software Engineer',
     when: 'Present',
     blurb:
-      'Building out the billing platform for an AI hyperscaler — usage metering, discretionary credits, and the APIs customers and finance both trust.',
-    tags: ['Go', 'Python', 'Billing', 'Distributed systems'],
+      'Go services on Kubernetes for the billing platform — usage metering, discretionary credits, and the APIs customers and finance both trust.',
+    tags: ['Go', 'Kubernetes', 'Billing', 'gRPC', 'Postgres', 'Kafka'],
   },
   {
     org: 'Amazon Web Services',
     role: 'boto3 maintainer',
     when: 'Past',
     blurb:
-      'Maintained the AWS SDK for Python used across the industry — the client libraries people import when they automate the cloud.',
+      'Maintained the AWS SDK for Python — the client libraries people import when they automate the cloud.',
     tags: ['Python', 'SDK', 'AWS'],
   },
   {
@@ -48,6 +48,14 @@ export const EXPERIENCE: Role[] = [
     blurb: 'Backend engineering at news scale — reliable services behind stories that ship every day.',
     tags: ['Backend', 'Python', 'Java'],
   },
+];
+
+export const STACK = [
+  {name: 'runtime', value: 'Go · Kubernetes · containers'},
+  {name: 'data', value: 'Postgres · Kafka · Redis'},
+  {name: 'apis', value: 'gRPC · Connect · REST'},
+  {name: 'ops', value: 'Prometheus · Grafana · CI/CD'},
+  {name: 'also', value: 'Python · Java when the job asks'},
 ];
 
 export const CREDIT = {

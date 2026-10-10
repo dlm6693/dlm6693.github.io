@@ -1,24 +1,24 @@
 :root {
-  /* Near-black game HUD — vibrant accents, almost no glow */
-  --bg: #050508;
-  --bg-panel: #0a0a10;
-  --bg-elev: #101018;
-  --well: #14141e;
-  --fg: #c8c8d4;
-  --bright: #f0f0f8;
-  --dim: #7a7a8c;
-  --faint: #5a5a6c;
-  --fainter: #3a3a48;
-  --ice: #3db8ff;
-  --ice-hot: #6ecfff;
-  --ok: #3dd68c;
-  --mint: #5aefb0;
-  --coral: #ff6a4a;
-  --peach: #ff9a7a;
-  --gold: #f0c040;
-  --lilac: #a78bfa;
-  --rose: #f472b6;
-  --teal: #2dd4bf;
+  /* OLED dark + muted jewel accents (colorful, not bright) */
+  --bg: #030305;
+  --bg-panel: #08080c;
+  --bg-elev: #0c0c12;
+  --well: #12121a;
+  --fg: #9a9aac;
+  --bright: #c4c4d0;
+  --dim: #5e5e70;
+  --faint: #48485a;
+  --fainter: #2e2e3a;
+  --ice: #2a7aad;
+  --ice-hot: #3a8ec4;
+  --ok: #2a9a62;
+  --mint: #3aab72;
+  --coral: #b8543a;
+  --peach: #c46a52;
+  --gold: #a8882e;
+  --lilac: #7a62b8;
+  --rose: #a85478;
+  --teal: #2a8a7a;
   --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --max: 920px;
   --pad: clamp(1rem, 4vw, 2.5rem);
@@ -28,7 +28,7 @@
   --c4: var(--gold);
   --c5: var(--lilac);
   --c6: var(--teal);
-  --border: #222230;
+  --border: #1a1a24;
   --hud: 1px solid var(--border);
 }
 
@@ -63,10 +63,9 @@ body {
   color: var(--fg);
   background-color: var(--bg);
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--ice) 12%, transparent), transparent);
-  background-size: 24px 24px, 24px 24px, 100% 100%;
+    linear-gradient(rgba(255, 255, 255, 0.008) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.008) 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
   background-attachment: fixed;
 }
 
@@ -79,10 +78,10 @@ body {
     to bottom,
     transparent 0,
     transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 3px
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 3px
   );
-  opacity: 0.4;
+  opacity: 0.55;
 }
 
 a {
@@ -393,7 +392,7 @@ a:hover {
   flex-direction: column;
   justify-content: center;
   padding: clamp(1.75rem, 5vw, 3.25rem) clamp(1.1rem, 4vw, 2.5rem) 2.25rem;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ice) 6%, transparent), transparent 60%);
+  background: transparent;
 }
 
 .prompt {
@@ -414,11 +413,8 @@ a:hover {
   line-height: 1.05;
   color: var(--bright);
   text-transform: uppercase;
-  /* Hard multi-color shadow offset — game title card, not soft glow */
-  text-shadow:
-    3px 0 0 var(--ice),
-    -2px 2px 0 var(--coral),
-    0 -2px 0 var(--ok);
+  /* Single muted offset — game title, not RGB glare */
+  text-shadow: 2px 2px 0 var(--ice);
   animation: rise 0.4s steps(4) both;
 }
 
@@ -435,16 +431,19 @@ a:hover {
 
 .meter-bar {
   width: min(240px, 45%);
-  height: 4px;
+  height: 3px;
   margin: 1rem 0 1.25rem;
   background: repeating-linear-gradient(
     90deg,
-    var(--ice) 0 12px,
-    var(--ok) 12px 24px,
-    var(--coral) 24px 36px,
-    var(--gold) 36px 48px,
-    var(--lilac) 48px 60px
+    var(--ice) 0 10px,
+    var(--fainter) 10px 14px,
+    var(--ok) 14px 24px,
+    var(--fainter) 24px 28px,
+    var(--coral) 28px 38px,
+    var(--fainter) 38px 42px,
+    var(--gold) 42px 52px
   );
+  opacity: 0.85;
   transform-origin: left center;
   animation: meter 0.5s steps(8) both;
   box-shadow: none;
@@ -882,6 +881,6 @@ a:hover {
     clip-path: none;
   }
   .brand {
-    text-shadow: 2px 0 0 var(--ice), -1px 1px 0 var(--coral);
+    text-shadow: 2px 2px 0 var(--ice);
   }
 }

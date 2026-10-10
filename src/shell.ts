@@ -27,7 +27,7 @@ export function openShell(active: NavId, inner: string): string {
     <main class="panel">
       <div class="statusbar">
         <span>METER://BILLING // LOC:QNS</span>
-        <span class="right"><span class="dot" aria-hidden="true"></span><span>LEDGER SYNCED · OK</span></span>
+        <span class="right"><span class="dot" aria-hidden="true"></span><span>HP OK · ALERTS ARMED</span></span>
       </div>
       <nav class="topnav" aria-label="Primary">
         <a class="brand-mini" href="/">${esc(SITE.name)}</a>

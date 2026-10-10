@@ -2,7 +2,7 @@ export const SITE = {
   name: 'David Miller',
   handle: 'dlm6693',
   title: 'Software engineer · CoreWeave',
-  focus: 'Go · Kubernetes · billing platforms',
+  focus: 'Go · Kubernetes · billing · developer experience',
   location: 'Queens, NY',
   github: 'https://github.com/dlm6693',
   linkedin: 'https://www.linkedin.com/in/david-l-miller',
@@ -13,22 +13,25 @@ export const SITE = {
 /** Short blurbs for the home page — depth lives on /about/. */
 export const ABOUT_TEASER = [
   'I build billing systems for AI infrastructure at CoreWeave — mostly Go on Kubernetes.',
-  'NYC native in Queens. Three cats. Not an OSS highlight reel.',
+  'Not on a dedicated tools team, but I care deeply about DevX, CI/CD, and the paths that make engineers faster.',
 ];
 
 /** Longer bio — personality + path, not a résumé paste. */
 export const BIO = {
-  lead: 'I like systems that stay boring under load — meters that add up, ledgers that reconcile, APIs that tell the truth about usage.',
+  lead: 'I like systems that stay boring under load — and tooling that makes the next change feel safe.',
   paragraphs: [
     'Right now that means the billing platform at CoreWeave: Go services on Kubernetes, Postgres and Kafka in the middle, Prometheus when something lies. Hyperscale AI infra is loud; the money path has to be quiet and correct.',
-    'Before that I maintained boto3 at AWS — the Python SDK a huge slice of the industry imports without thinking about it. Before that, backend work at The New York Times. Different stacks, same job: ship reliable software other people depend on.',
-    'I grew up in New York City and live in Queens with my wife and three cats. I care more about clear interfaces and honest telemetry than about collecting stars on GitHub. If something is hard to operate, it is not finished.',
+    'I do not sit on a developer-tools team, but I obsess over DevX anyway — local loops, CI that you trust enough to merge on green, clear interfaces, honest telemetry. Shipping product is the job; making the suite around it less painful is how I stay effective.',
+    'Before CoreWeave I maintained boto3 at AWS — the Python SDK a huge slice of the industry imports without thinking about it. That was developer tooling at planetary scale: APIs, docs, and release paths other engineers build on.',
+    'At The New York Times I worked backend at news scale — services and data paths behind a site that has to ship every day, under editorial deadlines and traffic spikes. Reliability was not optional; the product is the publish button.',
+    'I grew up in New York City and live in Queens with my wife and three cats. Stars on GitHub are nice. A green CI run and a teammate who can onboard without a scavenger hunt are better.',
   ],
   asides: [
     {label: 'based', value: 'Queens, NY'},
     {label: 'day job', value: 'CoreWeave billing'},
+    {label: 'care about', value: 'DevX · CI/CD · tooling'},
     {label: 'languages', value: 'Go first · Python & Java as needed'},
-    {label: 'shape', value: 'backend · platforms · data paths'},
+    {label: 'shape', value: 'backend · platforms · feedback loops'},
   ],
 };
 
@@ -41,8 +44,12 @@ export const NOW = {
       body: 'Go services on k8s for metering, credits, and the APIs finance and customers share. Making the boring path correct is the whole game.',
     },
     {
+      title: 'DevX without a tools title',
+      body: 'CI/CD, local workflows, and the glue that keeps a platform team moving — even when the org chart says “billing,” not “developer experience.”',
+    },
+    {
       title: 'Cloud-native day-to-day',
-      body: 'Kubernetes, Postgres, Kafka, gRPC/Connect, Prometheus/Grafana, CI that you trust enough to merge on green.',
+      body: 'Kubernetes, Postgres, Kafka, gRPC/Connect, Prometheus/Grafana, pipelines you can trust.',
     },
     {
       title: 'Outside the terminal',
@@ -50,6 +57,7 @@ export const NOW = {
     },
   ],
   reading: [
+    'DevX and platform-engineering writing when CI starts to hurt',
     'Distributed systems papers when a bug smells philosophical',
     'Whatever the cats approve of on the couch',
   ],
@@ -69,23 +77,24 @@ export const EXPERIENCE: Role[] = [
     role: 'Software Engineer',
     when: 'Present',
     blurb:
-      'Go services on Kubernetes for the billing platform — usage metering, discretionary credits, and the APIs customers and finance both trust.',
-    tags: ['Go', 'Kubernetes', 'Billing', 'gRPC', 'Postgres', 'Kafka'],
+      'Go services on Kubernetes for the billing platform — usage metering, discretionary credits, and the APIs customers and finance both trust. Obsessing over CI and DevX even though the team charter is product, not tooling.',
+    tags: ['Go', 'Kubernetes', 'Billing', 'CI/CD', 'gRPC', 'Postgres', 'Kafka'],
   },
   {
     org: 'Amazon Web Services',
     role: 'boto3 maintainer',
     when: 'Past',
     blurb:
-      'Maintained the AWS SDK for Python — the client libraries people import when they automate the cloud.',
-    tags: ['Python', 'SDK', 'AWS'],
+      'Maintained the AWS SDK for Python — developer tooling at scale: client libraries, release paths, and APIs other engineers build careers on.',
+    tags: ['Python', 'SDK', 'DevTools', 'AWS'],
   },
   {
     org: 'The New York Times',
     role: 'Software Engineer',
     when: 'Past',
-    blurb: 'Backend engineering at news scale — reliable services behind stories that ship every day.',
-    tags: ['Backend', 'Python', 'Java'],
+    blurb:
+      'Backend engineering at news scale — services and data paths behind a daily publish machine, where traffic spikes and editorial deadlines do not wait for a flaky deploy.',
+    tags: ['Backend', 'Newsroom scale', 'Reliability'],
   },
 ];
 
@@ -93,7 +102,8 @@ export const STACK = [
   {name: 'runtime', value: 'Go · Kubernetes · containers'},
   {name: 'data', value: 'Postgres · Kafka · Redis'},
   {name: 'apis', value: 'gRPC · Connect · REST'},
-  {name: 'ops', value: 'Prometheus · Grafana · CI/CD'},
+  {name: 'devx', value: 'CI/CD · local loops · clear interfaces'},
+  {name: 'ops', value: 'Prometheus · Grafana · pipelines'},
   {name: 'also', value: 'Python · Java when the job asks'},
 ];
 

@@ -1,13 +1,6 @@
 import './style.css';
-import {ABOUT, CREDIT, EXPERIENCE, SITE, STACK} from './content.ts';
-
-function esc(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
+import {ABOUT_TEASER, CREDIT, EXPERIENCE, SITE, STACK} from './content.ts';
+import {esc, mount} from './shell.ts';
 
 const roles = EXPERIENCE.map(
   (r, i) => `
@@ -30,19 +23,9 @@ const stackRows = STACK.map(
   </div>`,
 ).join('');
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div class="shell">
-    <aside class="rail" aria-hidden="true">
-      <div class="ticks"></div>
-      <span class="rail-label">QNS</span>
-    </aside>
-
-    <main class="panel">
-      <div class="statusbar">
-        <span>METER://BILLING // LOC:QNS</span>
-        <span class="right"><span class="dot" aria-hidden="true"></span><span>LEDGER SYNCED · OK</span></span>
-      </div>
-
+mount(
+  'home',
+  `
       <section class="hero" id="top">
         <p class="prompt"><span class="ok">$</span> identity<span class="cursor" aria-hidden="true"></span></p>
         <h1 class="brand">${esc(SITE.name)}</h1>
@@ -50,18 +33,20 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
         <p class="tagline">${esc(SITE.title)}</p>
         <p class="focus">${esc(SITE.focus)} <span class="amp">·</span> ${esc(SITE.location)}</p>
         <div class="hero-cta">
-          <a class="btn" href="#path">Path</a>
+          <a class="btn" href="/about/">Bio</a>
+          <a class="btn secondary" href="/now/">Now</a>
           <a class="btn secondary" href="${esc(SITE.linkedin)}" rel="noopener noreferrer" target="_blank">LinkedIn</a>
         </div>
       </section>
 
       <section class="section about" id="about">
         <div class="section-head">
-          <h2><span class="path">~/</span>about</h2>
+          <h2><span class="path">~/</span>teaser</h2>
           <span class="counter">// 01</span>
         </div>
-        <p class="cmd"><span class="ok">$</span> cat notes.md <span class="comment"># short version</span></p>
-        ${ABOUT.map(p => `<p>${esc(p)}</p>`).join('')}
+        <p class="cmd"><span class="ok">$</span> head -n 2 about.md</p>
+        ${ABOUT_TEASER.map(p => `<p>${esc(p)}</p>`).join('')}
+        <p class="more"><a href="/about/">read the full bio →</a></p>
       </section>
 
       <section class="section" id="stack">
@@ -69,7 +54,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <h2><span class="path">~/</span>stack</h2>
           <span class="counter">// 02</span>
         </div>
-        <p class="cmd"><span class="ok">$</span> kubectl get tools -n billing <span class="comment"># day-to-day</span></p>
+        <p class="cmd"><span class="ok">$</span> kubectl get tools -n billing</p>
         <div class="stack-list">${stackRows}</div>
       </section>
 
@@ -87,7 +72,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <h2><span class="path">~/</span>skyline</h2>
           <span class="counter">// 04</span>
         </div>
-        <p class="cmd"><span class="ok">$</span> render --graph 365d <span class="comment"># synced from GitHub</span></p>
+        <p class="cmd"><span class="ok">$</span> render --graph 365d</p>
         <div class="city-wrap">
           <picture>
             <source media="(max-width: 600px)" srcset="${esc(SITE.profileCityPhone)}" />
@@ -105,7 +90,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <a href="${esc(SITE.github)}/${esc(SITE.handle)}">GitHub profile</a>.
           City technique by
           <a href="${esc(CREDIT.url)}">${esc(CREDIT.name)}</a>
-          (<a href="${esc(CREDIT.post)}">writeup</a>), MIT — restyled here for ice + billing chrome.
+          (<a href="${esc(CREDIT.post)}">writeup</a>), MIT.
         </p>
       </section>
 
@@ -120,11 +105,5 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
           <a class="btn secondary" href="${esc(SITE.github)}" rel="noopener noreferrer" target="_blank">GitHub</a>
         </div>
       </section>
-
-      <footer class="footer">
-        <span><span class="ok">$</span> exit — see you around <a href="${esc(SITE.github)}">${esc(SITE.handle)}</a>.</span>
-        <span class="eof">// Queens</span>
-      </footer>
-    </main>
-  </div>
-`;
+`,
+);

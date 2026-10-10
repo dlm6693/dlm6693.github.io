@@ -4,21 +4,21 @@
   --bg-panel: #08080c;
   --bg-elev: #0c0c12;
   --well: #12121a;
-  --fg: #9a9aac;
-  --bright: #c4c4d0;
-  --dim: #5e5e70;
-  --faint: #48485a;
-  --fainter: #2e2e3a;
-  --ice: #2a7aad;
-  --ice-hot: #3a8ec4;
-  --ok: #2a9a62;
-  --mint: #3aab72;
-  --coral: #b8543a;
-  --peach: #c46a52;
-  --gold: #a8882e;
-  --lilac: #7a62b8;
-  --rose: #a85478;
-  --teal: #2a8a7a;
+  --fg: #b4b4c4;
+  --bright: #e2e2ec;
+  --dim: #6e6e82;
+  --faint: #505062;
+  --fainter: #323240;
+  --ice: #3a9ad4;
+  --ice-hot: #5eb4e4;
+  --ok: #2eb878;
+  --mint: #46c888;
+  --coral: #d45a42;
+  --peach: #e07860;
+  --gold: #c9a03a;
+  --lilac: #9078d4;
+  --rose: #c06090;
+  --teal: #2a9a88;
   --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --max: 920px;
   --pad: clamp(1rem, 4vw, 2.5rem);
@@ -145,7 +145,6 @@ a:hover {
 .panel {
   position: relative;
   border: var(--hud);
-  border-top: 2px solid var(--ice);
   background: var(--bg-panel);
   /* Hard corner notches — game menu chrome */
   clip-path: polygon(
@@ -158,6 +157,12 @@ a:hover {
     12px 100%,
     0 calc(100% - 12px)
   );
+}
+.panel::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ice), var(--ok), var(--coral), var(--gold), var(--lilac));
 }
 
 .statusbar {
@@ -569,12 +574,27 @@ a:hover {
 }
 
 .section-head {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 1rem;
   margin-bottom: 0.35rem;
 }
+.section-head .counter {
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  color: color-mix(in srgb, var(--ice) 35%, transparent);
+  background: none;
+  -webkit-background-clip: unset;
+  background-clip: unset;
+}
+.section:nth-of-type(5n + 2) .section-head .counter { color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.section:nth-of-type(5n + 3) .section-head .counter { color: color-mix(in srgb, var(--coral) 40%, transparent); }
+.section:nth-of-type(5n + 4) .section-head .counter { color: color-mix(in srgb, var(--gold) 40%, transparent); }
+.section:nth-of-type(5n + 5) .section-head .counter { color: color-mix(in srgb, var(--lilac) 40%, transparent); }
 .section-head h2 {
   margin: 0;
   font-size: 1.1rem;
@@ -600,14 +620,6 @@ a:hover {
 }
 .section:nth-of-type(5n + 5) .section-head h2 .path {
   color: var(--lilac);
-}
-.section-head .counter {
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: var(--faint);
-  background: none;
-  -webkit-background-clip: unset;
-  background-clip: unset;
 }
 
 .section .cmd {

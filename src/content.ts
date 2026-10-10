@@ -23,7 +23,7 @@ export const BIO = {
     'Right now that means the billing platform at CoreWeave: Go services on Kubernetes, Postgres and Kafka in the middle, Prometheus when something looks suspicious. Hyperscale AI infra is loud; the money path has to be quiet and correct. If something should have paged and did not, that is the bug.',
     'I do not sit on a developer-tools team, but I obsess over DevX anyway — local loops, CI you trust enough to merge on green, clear interfaces. Shipping product is the job; making the suite around it less painful is how I stay effective (and slightly less sarcastic in Slack).',
     'Before CoreWeave I maintained boto3 at AWS — developer tooling at planetary scale. Think “a package manager for your package manager,” except it was the AWS SDK a huge slice of the industry imports without thinking about it.',
-    'At The New York Times I worked backend at news scale — services behind a daily publish machine. Editorial deadlines do not wait for a flaky deploy. Neither should your pipeline.',
+    'At The New York Times I was a senior engineer on backend at news scale — services behind a daily publish machine. Editorial deadlines do not wait for a flaky deploy. Neither should your pipeline.',
     'NYC native, Queens resident, three cats. I will volunteer for the hard on-call question, then joke about never volunteering again. Then I will still cut the ticket for Monday.',
   ],
   asides: [
@@ -90,7 +90,7 @@ export const EXPERIENCE: Role[] = [
   },
   {
     org: 'The New York Times',
-    role: 'Software Engineer',
+    role: 'Senior Software Engineer',
     when: 'Past',
     blurb:
       'Backend at news scale — services behind a daily publish machine, where traffic spikes and deadlines do not wait for a flaky deploy.',

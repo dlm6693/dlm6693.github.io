@@ -24,7 +24,9 @@ jobs:
             https://raw.githubusercontent.com/dlm6693/dlm6693/main/assets/phone/contribution-city.svg
           curl -fsSL -o public/data/calendar.json \
             https://raw.githubusercontent.com/dlm6693/dlm6693/main/data/calendar.json
-          git add public/contribution-city.svg public/contribution-city-phone.svg public/data/calendar.json
+          curl -fsSL -o public/data/stats.json \
+            https://raw.githubusercontent.com/dlm6693/dlm6693/main/data/snapshot.json
+          git add public/contribution-city.svg public/contribution-city-phone.svg public/data/calendar.json public/data/stats.json
           if git diff --cached --quiet; then
             echo "city assets unchanged"
             exit 0

@@ -1,0 +1,38 @@
+/* Cats roam the page (positions set from cats.ts) and chase a tennis ball. */
+.walker .hop { display: block; transform-origin: bottom center; }
+html[data-motion='on'] .walker.walking .hop { animation: hop 0.36s ease-in-out infinite; }
+html[data-motion='on'] .walker.sitting .hop { transform: translateY(4px) scaleY(0.8); }
+html[data-motion='on'] .walker.batting .hop { animation: bat 0.4s ease-out; }
+.walker.facing-right svg { transform: scaleX(-1); }
+
+@keyframes bat {
+  0% { transform: translateY(0) rotate(0); }
+  40% { transform: translateY(-14px) rotate(-12deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+
+.ball {
+  position: absolute;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ccff00;
+  box-shadow: inset -2px -2px 0 rgb(0 0 0 / 0.2), 2px 3px 0 rgb(0 0 0 / 0.35);
+  pointer-events: none;
+  transition: opacity 0.6s ease;
+}
+.ball::before {
+  content: '';
+  position: absolute;
+  inset: 2px -1px;
+  border: 1.5px solid #f5f8ff;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+}
+.ball.gone { opacity: 0; }
+
+@media (max-width: 600px) {
+  .walker { width: 3.2rem; }
+}

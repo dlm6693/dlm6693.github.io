@@ -1,5 +1,6 @@
 import './style.css';
 import {NOW} from './content.ts';
+import {emblem} from './emblems.ts';
 import {esc, mount} from './shell.ts';
 
 const items = NOW.items
@@ -9,15 +10,15 @@ const items = NOW.items
 mount(
   'now',
   `
-    <header class="page-head">
-      <h1 class="page-title">Now</h1>
-      <p class="updated">Updated <time datetime="${esc(NOW.updated)}">${esc(NOW.updatedLabel)}</time></p>
-      <p class="lead">What I’m focused on at the moment. It’s short on purpose, and it changes when something actually changes.
-      (<a href="https://nownownow.com/about">What’s a now page?</a>)</p>
+    <header class="screen">
+      <p class="prompt"><span class="ps1">dlm@queens</span>:~$ cat now</p>
+      <h1>Now</h1>
+      <p class="stamp">Updated <time datetime="${esc(NOW.updated)}">${esc(NOW.updatedLabel)}</time></p>
+      <p class="lead">What I’m focused on. It changes when the work does, not when the site does. (<a href="https://nownownow.com/about">What’s a now page?</a>)</p>
     </header>
-
-    <div class="section">
-      <dl class="now-list">${items}</dl>
-    </div>
+    <section class="panel settle now-board">
+      <div class="entry-mark">${emblem('coreweave')}</div>
+      <dl class="snapshot">${items}</dl>
+    </section>
 `,
 );

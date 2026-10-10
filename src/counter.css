@@ -1,0 +1,21 @@
+/* Status strip under the HUD: real GitHub totals, counted up once on load. */
+.meter {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.25rem;
+  padding: 0.35rem var(--pad);
+  border-bottom: 1px solid var(--line);
+  background: rgb(7 11 20 / 0.55);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.meter-item { display: inline-flex; gap: 0.4rem; white-space: nowrap; }
+.meter-label::after { content: ':'; }
+.meter-value { color: var(--amber); font-variant-numeric: tabular-nums; min-width: 2ch; }
+.meter-since { margin-left: auto; }
+@media (max-width: 520px) {
+  .meter-since { display: none; }
+}

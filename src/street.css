@@ -1,0 +1,92 @@
+/* 7 train above the skyline, cars on the street below. */
+.el {
+  position: relative;
+  height: 42px;
+  margin-bottom: 0.35rem;
+  overflow: hidden;
+  container-type: inline-size;
+}
+.el-rail {
+  position: absolute;
+  right: 0;
+  bottom: 6px;
+  left: 0;
+  height: 3px;
+  background: var(--line);
+}
+.el-rail::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 3px;
+  left: 0;
+  height: 16px;
+  background: repeating-linear-gradient(90deg, var(--line) 0 2px, transparent 2px 56px);
+}
+.el-train {
+  position: absolute;
+  bottom: 8px;
+  left: 28%;
+  width: 152px;
+  height: 22px;
+}
+.el-train svg { display: block; width: 100%; height: auto; }
+.el-train.back { left: 62%; transform: scaleX(-1); }
+html[data-motion='on'] .el-train {
+  left: 0;
+  animation: train var(--run, 28s) linear infinite;
+}
+html[data-motion='on'] .el-train.back { animation-delay: calc(var(--run, 28s) / -2); }
+@keyframes train {
+  0% { transform: translateX(-160px); }
+  52% { transform: translateX(100cqi); }
+  100% { transform: translateX(100cqi); }
+}
+html[data-motion='on'] .el-train.back { animation-name: train-back; }
+@keyframes train-back {
+  0% { transform: scaleX(-1) translateX(-160px); }
+  52% { transform: scaleX(-1) translateX(100cqi); }
+  100% { transform: scaleX(-1) translateX(100cqi); }
+}
+html[data-motion='on'] .headlight { filter: drop-shadow(0 0 3px #f5f8ff); }
+
+.street {
+  position: relative;
+  height: 30px;
+  margin-top: 0.45rem;
+  overflow: hidden;
+  container-type: inline-size;
+  background: #0c101c;
+  border-top: 1px solid var(--line);
+}
+.street::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: repeating-linear-gradient(90deg, var(--amber) 0 8px, transparent 8px 18px);
+  opacity: 0.4;
+}
+.car {
+  position: absolute;
+  top: 2px;
+  left: var(--rest, 20%);
+  width: 22px;
+  height: 9px;
+  box-shadow: inset 14px 2px 0 0 rgb(245 248 255 / 0.85), inset -3px 6px 0 0 #ff4f4f;
+}
+.car.lane-1 { top: 17px; box-shadow: inset -14px 2px 0 0 rgb(245 248 255 / 0.85), inset 3px 6px 0 0 #f0b429; }
+html[data-motion='on'] .car {
+  left: 0;
+  animation: drive var(--dur, 14s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+html[data-motion='on'] .car.lane-1 { animation-direction: reverse; }
+@keyframes drive {
+  from { transform: translateX(-28px); }
+  to { transform: translateX(100cqi); }
+}
+
+.street-note { margin: 0.4rem 0 0; color: var(--muted); font-family: var(--mono); font-size: 0.75rem; }

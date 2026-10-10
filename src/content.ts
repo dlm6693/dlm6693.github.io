@@ -17,9 +17,22 @@ export const INTRO =
 export const THROUGH_LINE =
   'Developers, subscribers, and GPU customers are very different audiences. The work underneath has been similar: backend systems people depend on without having to think about them.';
 
+export type EmblemId =
+  | 'coreweave'
+  | 'nyt'
+  | 'aws'
+  | 'go'
+  | 'kubernetes'
+  | 'python'
+  | 'java'
+  | 'postgres'
+  | 'kafka'
+  | 'github';
+
 export type Role = {
   org: string;
   title: string;
+  emblem: EmblemId;
   current?: boolean;
   summary: string;
 };
@@ -29,6 +42,7 @@ export const WORK: Role[] = [
   {
     org: 'CoreWeave',
     title: 'Senior Software Engineer',
+    emblem: 'coreweave',
     current: true,
     summary:
       'Billing infrastructure for GPU cloud computing: metering usage and processing infrastructure usage data reliably enough to bill from. Mostly Go, on Kubernetes.',
@@ -36,11 +50,13 @@ export const WORK: Role[] = [
   {
     org: 'The New York Times',
     title: 'Senior Software Engineer',
+    emblem: 'nyt',
     summary: 'Backend systems for the Times’ subscription platform.',
   },
   {
     org: 'AWS',
     title: 'Software Development Engineer',
+    emblem: 'aws',
     summary: 'Worked on boto3, the AWS SDK for Python.',
   },
 ];
@@ -49,6 +65,16 @@ export const INTERESTS =
   'Distributed systems and backend architecture, mostly — and the properties that decide whether you can trust them: correctness, reliability, observability. Also cloud and data infrastructure, Kubernetes, developer productivity, and programming language design and performance: why a language makes the trade-offs it does, and what they cost.';
 
 export const LANGUAGES = ['Go', 'Python', 'Java'];
+
+export const LOADOUT: {id: EmblemId; name: string; href: string}[] = [
+  {id: 'go', name: 'Go', href: 'https://go.dev'},
+  {id: 'kubernetes', name: 'Kubernetes', href: 'https://kubernetes.io'},
+  {id: 'python', name: 'Python', href: 'https://www.python.org'},
+  {id: 'java', name: 'Java', href: 'https://dev.java'},
+  {id: 'postgres', name: 'PostgreSQL', href: 'https://www.postgresql.org'},
+  {id: 'kafka', name: 'Kafka', href: 'https://kafka.apache.org'},
+  {id: 'github', name: 'GitHub', href: SITE.github},
+];
 
 export const BIO = {
   lead: 'I’m a backend and infrastructure engineer in Queens. Most of my career has been spent on systems other people build on, depend on, or get billed by.',

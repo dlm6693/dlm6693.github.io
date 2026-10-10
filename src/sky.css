@@ -1,0 +1,152 @@
+/* Sky layer behind the page: time-of-day tint, stars, moon, sun and live weather. */
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+  --star: #e9f1ff;
+  --sun: var(--amber);
+  --cloud: rgb(176 107 255 / 0.16);
+}
+.world > main { position: relative; z-index: 1; }
+
+.sky-tint, .sky-bodies, .sky-weather { position: absolute; inset: 0; }
+.sky-tint { height: min(60vh, 100%); }
+.sky-weather {
+  height: min(80vh, 100%);
+  mask-image: linear-gradient(#000 40%, transparent 85%);
+}
+
+/* Phase tints: top of the sky down to a horizon ~60vh, then the page as it is. */
+.sky[data-phase='night'] .sky-tint { background: linear-gradient(180deg, rgb(30 22 86 / 0.5), rgb(176 107 255 / 0.1) 55%, transparent); }
+.sky[data-phase='dawn'] .sky-tint { background: linear-gradient(180deg, rgb(176 107 255 / 0.2), rgb(255 79 154 / 0.16) 48%, rgb(240 180 41 / 0.18) 82%, transparent); }
+.sky[data-phase='day'] .sky-tint { background: linear-gradient(180deg, rgb(62 224 255 / 0.15), rgb(62 224 255 / 0.05) 60%, transparent); }
+.sky[data-phase='dusk'] .sky-tint { background: linear-gradient(180deg, rgb(240 180 41 / 0.14), rgb(255 79 154 / 0.16) 45%, rgb(176 107 255 / 0.2) 82%, transparent); }
+.sky[data-phase='day'] { --cloud: rgb(220 236 255 / 0.28); }
+.sky[data-phase='dawn'] { --cloud: rgb(255 158 199 / 0.2); }
+.sky[data-phase='dusk'] { --cloud: rgb(255 158 61 / 0.18); --sun: var(--magenta); }
+
+/* Stars: 2px pixels, every third one twinkles. */
+.sky-star {
+  position: absolute;
+  left: var(--left);
+  top: var(--top);
+  width: 2px;
+  height: 2px;
+  background: var(--star);
+  opacity: 0.7;
+}
+.sky-star:nth-child(4n) { opacity: 0.4; }
+.sky[data-phase='dawn'] .sky-star, .sky[data-phase='dusk'] .sky-star { opacity: 0.3; }
+
+/* Moon: a 16x16 pixel disc, lit pixels by lunar phase. */
+.sky-moon {
+  position: absolute;
+  top: min(8vh, 12%);
+  right: 9%;
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 0 10px rgb(233 241 255 / 0.3));
+}
+.sky-moon .lit { fill: #eef3ff; }
+.sky-moon .dim { fill: rgb(176 107 255 / 0.22); }
+
+/* Sun: a stepped pixel octagon with a soft glow behind it. */
+.sky-sun { position: absolute; width: 28px; height: 28px; }
+.sky-sun::before {
+  content: '';
+  position: absolute;
+  inset: -22px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--sun) 38%, transparent), transparent 70%);
+}
+.sky-sun::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--sun);
+  clip-path: polygon(8px 0, 20px 0, 20px 4px, 24px 4px, 24px 8px, 28px 8px, 28px 20px, 24px 20px, 24px 24px, 20px 24px, 20px 28px, 8px 28px, 8px 24px, 4px 24px, 4px 20px, 0 20px, 0 8px, 4px 8px, 4px 4px, 8px 4px);
+}
+.sky-sun-high { top: min(7vh, 10%); right: 8%; }
+.sky-sun-low { top: min(44vh, 66%); left: 12%; }
+.sky-sun-low::before { inset: -34px; }
+.sky[data-phase='dusk'] .sky-sun-low { left: auto; right: 14%; }
+
+/* Clouds: chunky stepped rectangles. */
+.sky-cloud {
+  position: absolute;
+  left: var(--left);
+  top: var(--top);
+  height: 10px;
+  background: var(--cloud);
+}
+.sky-cloud::before, .sky-cloud::after { content: ''; position: absolute; background: inherit; }
+.sky-cloud::before { left: 20%; top: -8px; width: 45%; height: 8px; }
+.sky-cloud::after { left: 34%; top: -14px; width: 22%; height: 6px; }
+
+/* Rain, snow, fog, lightning. */
+.sky-drop { position: absolute; left: var(--left); top: var(--top); width: 1px; height: 6px; background: rgb(62 224 255 / 0.45); }
+.sky-flake { position: absolute; left: var(--left); top: var(--top); width: 2px; height: 2px; background: #eef3ff; opacity: 0.8; }
+.sky-fog {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  top: 30%;
+  height: 28%;
+  background: linear-gradient(180deg, transparent, rgb(215 224 242 / 0.12) 40%, rgb(215 224 242 / 0.14) 70%, transparent);
+  filter: blur(6px);
+}
+.sky-flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+
+/* HUD readout: "Queens · 61°F · overcast · 14:25". */
+.sky-readout {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@media (max-width: 520px) { .sky-wx { display: none; } }
+@media (max-width: 450px) { .sky-place, .sky-sep { display: none; } }
+
+/* Ambient motion, only when the toggle says so. The static layout above is the finished frame. */
+html[data-motion='on'] .sky-tw { animation: sky-twinkle 3.4s ease-in-out infinite; animation-delay: var(--delay); }
+html[data-motion='on'] .sky-sun-high { animation: sky-sway 160s ease-in-out infinite alternate; }
+html[data-motion='on'] .sky-cloud { left: 0; animation: sky-drift var(--dur) linear infinite; animation-delay: var(--delay); }
+html[data-motion='on'] .sky-drop { top: -8px; animation: sky-rain var(--dur) linear infinite; animation-delay: var(--delay); }
+html[data-motion='on'] .sky-flake { top: -4px; animation: sky-snow var(--dur) linear infinite; animation-delay: var(--delay); }
+html[data-motion='on'] .sky-fog { animation: sky-haze 28s ease-in-out infinite alternate; }
+html[data-motion='on'] .sky-flash { animation: sky-flash 9s linear infinite; }
+
+@keyframes sky-twinkle {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes sky-sway {
+  from { transform: translateX(-2rem); }
+  to { transform: translateX(2rem); }
+}
+@keyframes sky-drift {
+  from { transform: translateX(-10rem); }
+  to { transform: translateX(100cqi); }
+}
+@keyframes sky-rain {
+  from { transform: translateY(0); }
+  to { transform: translateY(75cqh); }
+}
+@keyframes sky-snow {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(8px, 18cqh); }
+  50% { transform: translate(-4px, 36cqh); }
+  75% { transform: translate(8px, 54cqh); }
+  100% { transform: translate(0, 72cqh); }
+}
+@keyframes sky-haze {
+  from { opacity: 0.6; transform: translateX(-2%); }
+  to { opacity: 1; transform: translateX(2%); }
+}
+@keyframes sky-flash {
+  0%, 3.5%, 6%, 100% { opacity: 0; }
+  1.5% { opacity: 0.07; }
+  5% { opacity: 0.045; }
+}
